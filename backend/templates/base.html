@@ -6,6 +6,31 @@
     <title>Document</title>
 </head>
 <body>
-    This is the base html template to show everything
+    <!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Reports</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .header { margin-bottom: 30px; }
+        .report-card { 
+            border: 1px solid #ddd; 
+            padding: 20px; 
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f2f2f2; }
+        .filters { background: #f9f9f9; padding: 15px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Admin Reports</h1>
+    </div>
+    {% block content %}{% endblock %}
+</body>
+</html>
 </body>
 </html>

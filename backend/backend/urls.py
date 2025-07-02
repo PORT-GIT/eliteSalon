@@ -23,4 +23,6 @@ urlpatterns = [
     path('', include("users.urls")),
 
     #path('', include("services.urls")),
+
+    path('', include("reports.urls")),
 ]
