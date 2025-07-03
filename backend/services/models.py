@@ -1,5 +1,4 @@
 from django.db import models
-#from users.models import customerProfile, employeeProfile
 
 # Create your models here.
 class services(models.Model):
@@ -32,11 +31,11 @@ class salonAppointment(models.Model):
 
 class servicesGiven(models.Model):
     RATINGS = (
-        ('1','1'),
-        ('2', '2'),
-        ('3', '3'),
-        ('4', '4'),
-        ('5', '5'),
+    ('1','1'),
+    ('2', '2'),
+    ('3', '3'),
+    ('4', '4'),
+    ('5', '5'),
     )
 
     id = models.AutoField(primary_key=True)#this will enable the auto-increment factor

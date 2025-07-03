@@ -8,17 +8,17 @@ class customUser(AbstractUser):
         ('EMPLOYEE', 'Employee'),
         ('CUSTOMER', 'Customer'),
     )
-    username = None
+    username = models.CharField(max_length=25, unique=True)
     phoneNumber = models.CharField(max_length=20, null=False)
     email = models.EmailField(unique=True)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='CUSTOMER', null=False)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email']
     
     def __str__(self):
         return self.email
-
+#using this also changes the data fields for creating a superuser so i have gone back to use username instead of email
 
 class adminProfile(models.Model):
     id = models.IntegerField(primary_key=True)

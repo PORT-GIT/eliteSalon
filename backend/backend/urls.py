@@ -24,5 +24,5 @@ urlpatterns = [
 
     #path('', include("services.urls")),
 
-    path('', include("reports.urls")),
+    #path('', include("reports.urls")),
 ]

@@ -1,36 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <!DOCTYPE html>
+{% load static %}
+
+<!DOCTYPE 
 <html>
-<head>
-    <title>Admin Reports</title>
-    <style>
-        body { font-family: Arial; margin: 20px; }
-        .header { margin-bottom: 30px; }
-        .report-card { 
-            border: 1px solid #ddd; 
-            padding: 20px; 
-            margin-bottom: 20px;
-            border-radius: 5px;
-        }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: #f2f2f2; }
-        .filters { background: #f9f9f9; padding: 15px; margin-bottom: 20px; }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>Admin Reports</h1>
-    </div>
-    {% block content %}{% endblock %}
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static '/css/style.css' %}">
+        <!-- Or, if using a project-level static folder: -->
+        <!-- <link rel="stylesheet" href="{% static 'css/global.css' %}"> -->
+        <title>Elite Feedback System</title>
+    </head>
+
+    <body>
+        
+        {% block content %}{% endblock %}
+    </body>
 </html>
-</body>
-</html>
+
+
+

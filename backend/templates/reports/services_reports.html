@@ -1,0 +1,35 @@
+    {% extends 'base.html' %}  
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Services Report</title>
+        <style>
+            /* same style as above */
+        </style>
+    </head>
+    <body>
+        <h1>Services Report</h1>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Category</th>
+                <th>Service Name</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>Duration</th>
+                <th>Last Updated</th>
+            </tr>
+            {% for service in services %}
+            <tr>
+                <td>{{ service.id }}</td>
+                <td>{{ service.category }}</td>
+                <td>{{ service.serviceName }}</td>
+                <td>{{ service.price }}</td>
+                <td>{{ service.description }}</td>
+                <td>{{ service.durationOfService }}</td>
+                <td>{{ service.updatedAt }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+    </html>
