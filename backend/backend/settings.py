@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    'services',
+    'salon',
     'reports',
     'slick_reporting',
     #this is the django tool that will assist me in generating reports
