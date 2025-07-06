@@ -26,7 +26,7 @@ class salonAppointment(models.Model):
 
     id = models.AutoField(primary_key=True)#this will enable the auto-increment factor
     customerId = models.ForeignKey('users.customerProfile', on_delete=models.CASCADE)
-    services = models.ForeignKey(service, on_delete=models.CASCADE, to_field='service_name')
+    services = models.ManyToManyField(service, related_name="salon_appointment")
     employeeId = models.ForeignKey('users.employeeProfile', on_delete=models.CASCADE)
     scheduleDay = models.DateField()
     appointmentStatus = models.CharField(max_length=20, choices=APPOINTMENT_STATUS, default='PENDING')
@@ -35,8 +35,9 @@ class salonAppointment(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
 
+    
     def __str__(self):
-        return self.id +"...."+ self.employeeId +"...."+ self.customerId +self. services
+     return f"{self.id} - {self.customerId} - {self.employeeId} - {self.services}"
 
 class servicesGiven(models.Model):
     RATINGS = (

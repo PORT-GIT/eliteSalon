@@ -50,6 +50,7 @@ class CustomUser(AbstractUser):
     username = None #i can use user emails as way to create unique profiles for them rather than a username that has validation
     email = models.EmailField(_('email address'), unique=True)
     role = models.CharField(_('user role'),choices=ROLE_CHOICES, null=False, blank=False, max_length=20)
+   
     # this is when the user verifies their email
     # is_verified = models.BooleanField(_('verified'), default=False)
     # verification_token = models.CharField(_('verification token'), max_length=100, blank=True, null=True)# the blank allows unverified users
@@ -89,8 +90,7 @@ class employeeProfile(models.Model):
     phone_number = models.CharField(null=False, max_length=25)
     date_of_birth = models.DateField(null=False, blank=False)
     skills = models.CharField(null=False, max_length=200, blank=False)
-    services_offered = models.ForeignKey('salon.service', verbose_name=_('services offered'), on_delete=models.CASCADE)
-    #this shows the one-many relationship between the employee an the services they offer
+    services_offered = models.ManyToManyField('salon.service', verbose_name=_('services offered'), related_name="employee_profile")
     work_status = models.CharField(choices=WORK_STATUS, max_length=20, default='FREE')
     updated_at = models.DateTimeField(auto_now=True)
 

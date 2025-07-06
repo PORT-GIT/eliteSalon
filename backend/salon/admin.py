@@ -9,7 +9,8 @@ class serviceAdmin(admin.ModelAdmin):
 admin.site.register(service, serviceAdmin)
 
 class appointmentAdmin(admin.ModelAdmin):
-    list_display = ('id', 'services', 'customerId', 'employeeId', 'appointmentStatus' )
+    list_display = ('id', 'customerId', 'employeeId', 'appointmentStatus' )
+    filter_horizontal = ('services',)#handles many-to-many fields
 
 admin.site.register (salonAppointment, appointmentAdmin)
 

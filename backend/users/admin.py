@@ -21,9 +21,8 @@ class employeeProfileInline(admin.StackedInline):
     max_num = 1
     #  can_delete=False and max_num=1 to enforce one profile per user
     verbose_name = 'Employee Profile'
-    fields = ('phone_number', 'skills')
-    filter_horizontal = ('services_offered',)#handles many-to-many fields
-
+    fields = ('phone_number', 'skills', 'work_status', 'date_of_birth', 'services_offered')
+   
 class adminProfileInline(admin.StackedInline):
     model = adminProfile
     can_delete = False
@@ -58,7 +57,7 @@ class customUserAdmin(UserAdmin):
         
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
 
-        ('Important Dates',  {'fields': ('last_login', 'date_joined')}),
+        ('Important Dates',  {'fields': ('date_joined',)}),
     )
 
     #fields for creating new users
