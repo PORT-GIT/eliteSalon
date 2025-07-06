@@ -31,20 +31,20 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-
-    'users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+    'users',
     'salon',
     'reports',
     'slick_reporting',
     #this is the django tool that will assist me in generating reports
 ]
+
+AUTH_USER_MODEL = 'users.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -89,15 +89,13 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'eliteSalon',
+        'NAME': 'Salon',
         'USER': 'postgres',
         'PASSWORD': 'MAGGIE2025',
         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
-
-AUTH_USER_MODEL = 'users.CustomUser'
 
 
 # Password validation
