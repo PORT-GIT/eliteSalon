@@ -1,7 +1,10 @@
-# from django.urls import path
-# from . import views
+from django.urls import path
+from .reports import ServiceReport
 
-# urlpatterns = [
+urlpatterns = [
+    path('service-report/', ServiceReport.as_view(), name='service_report'),
+
+]
 
 #     path('', views.reports_home, name='reports_home'),
 
@@ -13,5 +16,4 @@
 
 #     path('employees/', views.employees_report, name='employees_report'),
     
-#     path('customers/', views.customers_report, name='customers_report'),
-#     ]
+#     path('customers/', views.customers_report, name='customers_report')
