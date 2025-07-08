@@ -1,23 +1,44 @@
-from slick_reporting.views import ReportView
-from slick_reporting.fields import SlickReportField
-from salon.models import service
-from django.db.models import Count, Sum
+# from django.shortcuts import render
+# from django.db.models import Count, Sum, Avg
+# from salon.models import service, salonAppointment, servicesGiven
+# from users.models import customerProfile, employeeProfile
 
-class ServiceReport(ReportView):
-    report_model = service
-    date_field = 'createdAt'
-    default_report = 'show_empty'
+# def reports_dashboard(request):
+#     return render(request, 'reports/dashboard.html')
 
-    group_by = 'category'
+# def appointment_report(request):
+#     appointments = salonAppointment.objects.all()
+    
+#     # Add simple filters
+#     status = request.GET.get('status')
+#     if status:
+#         appointments = appointments.filter(appointmentStatus=status)
+    
+#     return render(request, 'reports/appointments.html', {
+#         'appointments': appointments
+#     })
 
-    columns = [
-        'category',
-        SlickReportField.create(Sum, 'price', name='total_price', verbose_name='Total Price'),
-        SlickReportField.create(Count, 'id', name='service_count', verbose_name='Number of Services'),
-    ]
+# def service_report(request):
+#     services_data = servicesGiven.objects.values(
+#         'servicesGiven__serviceName'
+#     ).annotate(
+#         total=Count('id'),
+#         avg_rating=Avg('customerRating')
+#     )
+#     return render(request, 'reports/services.html', {
+#         'services': services_data
+#     })
 
-    template_name = 'slick_reporting/services_reports.html'
+# def employee_report(request):
+#     employees = employeeProfile.objects.annotate(
+#         appointments_count=Count('salonappointment'),
+#         avg_rating=Avg('servicesgiven__employeeRating')
+#     )
+#     return render(request, 'reports/employees.html', {
+#         'employees': employees
+#     })
 
-
-class ServiceGivenReport(ReportView):
-    pass
+# from slick_reporting.views import ReportView
+# from slick_reporting.fields import SlickReportField
+# from salon.models import service
+# from django.db.models import Count, Sum
