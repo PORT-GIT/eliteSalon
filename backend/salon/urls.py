@@ -11,11 +11,9 @@ urlpatterns = [
 
     path('services-given/', views.services_given, name='services-given'),
 
-    path('services/', views.services, name='services'),
-
     path('appointments/', views.appointments, name='appointments'),
 
-    # path('services/', views.services, name='services'),
+    path('services/', views.ServicesListView.as_view(), name='services'),
 
 
 

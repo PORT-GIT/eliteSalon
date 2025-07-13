@@ -1,27 +1,32 @@
-<!-- {% load crispy_forms_tags %} -->
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html>
-<head>
+{% load crispy_forms_tags %}
+
     <title>Create Services Given</title>
-</head>
-<body>
-    <h1>Add Services Given</h1>
 
-    {% if messages %}
+{% block content %}
 
-    {% for message in messages %}
+    <div class="container mt-5 row justify-content-center">
+        <h1>Add Services Given</h1>
 
-    {{ message }}
+        <!-- {% if messages %}
 
-    {% endfor %}
+        {% for message in messages %}
 
-    {% endif %}
+        {{ message }}
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save</button>
-    </form>
-</body>
-</html>
+        {% endfor %}
+
+        {% endif %} -->
+
+        <div class="card shadow-sm">
+            <form method="post" class="card-body">
+                {% csrf_token %}
+                {{ form|crispy }}
+
+                <button type="submit" class="btn btn-success">Save</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

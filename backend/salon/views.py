@@ -1,12 +1,16 @@
 from django.shortcuts import render, redirect
+from django.views.generic import ListView
 from django.contrib import messages
 from .forms import ServiceForm, AppointmentsForm, ServicesGivenForm
+from .models import service
 
 def services_given(request):
     return render(request, 'salon/services_given.html')
 
-def services(request):
-    return render(request, 'salon/services.html')
+class ServicesListView(ListView):
+    model = service
+    template_name = 'salon/services_list.html'
+
 
 
 def appointments(request):
