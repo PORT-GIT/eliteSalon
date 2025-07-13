@@ -15,6 +15,8 @@ urlpatterns = [
 
     path('services/', views.ServicesListView.as_view(), name='services'),
 
+    path('homepage/', views.homepage, name='homepage'),
+
 
 
 ]
