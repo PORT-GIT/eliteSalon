@@ -1,0 +1,27 @@
+<!-- {% load crispy_forms_tags %} -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Services Given</title>
+</head>
+<body>
+    <h1>Add Services Given</h1>
+
+    {% if messages %}
+
+    {% for message in messages %}
+
+    {{ message }}
+
+    {% endfor %}
+
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+</body>
+</html>

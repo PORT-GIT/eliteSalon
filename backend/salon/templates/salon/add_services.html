@@ -1,0 +1,35 @@
+<!-- {% extends "base.html" %} -->
+
+
+{% block title %}
+
+    Create Service
+
+{% endblock %}
+
+{% block content %}
+    <section>
+        <h1>Add a New Service</h1>
+
+        
+     <!-- 
+        {% if messages %}
+
+        {% for message in messages %}
+
+        {{ message }}
+
+        {% endfor %}
+
+        {% endif %} -->
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            
+            <button class="form-submit" type="submit">Add Service</button>
+        </form>
+    </section>
+    
+{% endblock %}
+
