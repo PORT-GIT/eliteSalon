@@ -1,9 +1,47 @@
-{% extends "base.html" %}
-
+<!-- {% extends "base.html" %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto py-8">
-    <h1 class="text-3xl font-bold text-blue-600">App 1</h1>
-    <p class="mt-4">Welcome to App 1!</p>
-</div>
-{% endblock %}
+
+    <div class="header">
+        <h1>Services Given</h1>
+    </div>
+
+    <div class="services-given-list">
+
+        {% if services-given %}
+
+        <table class="services-given">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Salon Appointment</th>
+                    <th>Services</th>
+                    <th>Price``1</th>
+                    <th>Duration of Service</th>
+                    
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for service in services %}
+                <tr>
+                    <td> {{ service.category }}</td>
+                    <td> {{ service.service_name }} </td>
+                    <td> {{ service.description }} </td>
+                    <td> {{ service.price }} </td>
+                    <td> {{ service.durationOfService }} </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% else %}
+
+        <div class="message">
+            <p>No services found</p>
+        </div>
+
+        {% endif %}
+    </div>
+
+{% endblock %} -->

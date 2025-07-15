@@ -1,1 +1,47 @@
 {% extends "base.html" %}
+
+{% block content %}
+
+    <div class="header">
+        <h1>Services</h1>
+    </div>
+
+    <div class="services-list">
+
+        {% if services %}
+
+        <table class="services">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Service Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Duration of Service</th>
+                    
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for service in services %}
+                <tr>
+                    <td> {{ service.category }}</td>
+                    <td> {{ service.service_name }} </td>
+                    <td> {{ service.description }} </td>
+                    <td> {{ service.price }} </td>
+                    <td> {{ service.durationOfService }} </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% else %}
+
+        <div class="message">
+            <p>No services found</p>
+        </div>
+
+        {% endif %}
+    </div>
+
+{% endblock %}

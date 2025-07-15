@@ -3,15 +3,15 @@ from . import views
 
 
 urlpatterns = [
-    path('add-services/', views.add_services, name='add-service'),
+    path('add-services/', views.create_services, name='add-service'),
 
-    path('add-appointments/', views.add_appointments, name='add-appointments'),
+    path('add-appointments/', views.create_appointments, name='add-appointments'),
 
-    path('add-services-given/', views.add_services_given, name='add-services-given'),
+    path('add-services-given/', views.create_services_given, name='add-services-given'),
 
-    path('services-given/', views.services_given, name='services-given'),
+    path('services-given/', views.ServicesGivenListView.as_view(), name='services-given'),
 
-    path('appointments/', views.appointments, name='appointments'),
+    path('appointments/', views.AppointmentsListView.as_view(), name='appointments'),
 
     path('services/', views.ServicesListView.as_view(), name='services'),
 

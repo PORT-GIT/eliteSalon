@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser, customerProfile, employeeProfile, adminProfile
-from .forms import CustomUserCreationForm, CustomUserChangeForm
+from .forms import CustomUserCreationForm, CustomUserChangeForm, EmployeeRegistrationForm
 # rather than use separate admin i will use INLINES
 # also some fields are in CustomUser model
 # Using inlines will allow me to view a user and the associated profile
@@ -16,12 +16,13 @@ class customerProfileInline(admin.StackedInline):
 
 class employeeProfileInline(admin.StackedInline):
     model = employeeProfile
+    form = EmployeeRegistrationForm
     can_delete = False
     extra = 0
     max_num = 1
     #  can_delete=False and max_num=1 to enforce one profile per user
     verbose_name = 'Employee Profile'
-    fields = ('phone_number', 'skills', 'work_status', 'date_of_birth', 'services_offered')
+    fields = ('phone_number', 'work_status', 'date_of_birth', 'services_to_offer')
    
 class adminProfileInline(admin.StackedInline):
     model = adminProfile

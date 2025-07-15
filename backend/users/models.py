@@ -89,13 +89,12 @@ class employeeProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="employee_profile")
     phone_number = models.CharField(null=False, max_length=25)
     date_of_birth = models.DateField(null=False, blank=False)
-    skills = models.CharField(null=False, max_length=200, blank=False)
-    services_offered = models.ManyToManyField('salon.service', verbose_name=_('services offered'), related_name="employee_profile")
+    services_to_offer = models.ManyToManyField('salon.service', verbose_name=_('services offered'), related_name="employee_profile")
     work_status = models.CharField(choices=WORK_STATUS, max_length=20, default='FREE')
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.id} - {self.user.last_name}"
+        return str(self.id)+"    "+ self.user.first_name+"    "+self.user.last_name
     # this means that the names of the employee will be shown in the UI and admin
 
 
@@ -107,5 +106,5 @@ class customerProfile(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.user.first_name} - {self.user.last_name}"
+        return self.user.first_name +"    "+ self.user.last_name
 
