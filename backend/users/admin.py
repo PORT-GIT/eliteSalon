@@ -16,7 +16,6 @@ class customerProfileInline(admin.StackedInline):
 
 class employeeProfileInline(admin.StackedInline):
     model = employeeProfile
-    form = EmployeeRegistrationForm
     can_delete = False
     extra = 0
     max_num = 1
@@ -78,8 +77,8 @@ class customUserAdmin(UserAdmin):
                 return [customerProfileInline]
         return []
     
-    add_form = CustomUserCreationForm
-    form = CustomUserChangeForm
+    # add_form = CustomUserCreationForm
+    # form = CustomUserChangeForm
     # I have defined custom forms like CustomUserCreationForm and CustomUserChangeForm 
     # to customize how user creation and modification is handled in the Django admin interface.
 

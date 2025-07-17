@@ -42,7 +42,6 @@ class CustomUser(AbstractUser):
     #from the django file the abstractuser has the following fields username, first and last name, email, date joined, is staff, is active etc
 
     ROLE_CHOICES = (
-        ('ADMIN', 'Admin'),
         ('EMPLOYEE', 'Employee'),
         ('CUSTOMER', 'Customer'),
     )

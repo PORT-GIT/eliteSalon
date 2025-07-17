@@ -3,21 +3,24 @@
 
 {% block content %}
 
-    <div class="regemp">
-        <div class="title">
-            <h2>Employee Registration</h2>
+    <div class="regemp container mt-5">
+
+        <div class="row justify-content">
+
+            <h2 class="mb-4">Employee Registration</h2>
+
+            <div class="empform col-md-8">
+                <form method="post">
+                    {% csrf_token %}
+
+                    {{ user_form|crispy }}
+                    {{ profile_form|crispy }}
+
+                    <buttton class="btn-success btn mt-3" type="submit">Register Employee</buttton>
+                </form>
+            </div>
         </div>
-
-
-        <div class="empform">
-            <form method="post">
-                {% csrf_token %}
-
-                {{ form|crispy }}
-
-                <buttton class="btn-success btn" type="submit">Register Employee</buttton>
-            </form>
-        </div>
+ 
     </div>
 
 {% endblock %}
