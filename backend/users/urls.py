@@ -5,8 +5,8 @@ urlpatterns = [
     
     # path("", views.chat, name="chat"),
 
-    # path('register/employee', views.EmployeeRegistration.as_view(), name='employee-registration'),
+    path('register/employee', views.register_employee, name='register-employee'),
 
-    # path('register/customer', views.CustomerRegistration.as_view(), name='customer-registration'),
+    path('register/customer', views.register_customer, name='register-customer'),
 ]
 
