@@ -51,39 +51,39 @@ def create_services(request):
     return render(request, 'salon/add_services.html', {'form': form})
 
 
-# #to consider the fact that a user won't need to enter their own details i can add the decorator below which will capture their details:
-# #@login_required
-# def create_appointments(request):
-#     if request.method == 'POST':
-#         form = AppointmentsForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             messages.success(request, 'Appointment saved successfully')
-#             return redirect('appointments')
-#             # the redirect should match the view class
-#     else:
-#         form = AppointmentsForm()
-#         messages.success(request, 'Appointment has not been saved successfully')
+#to consider the fact that a user won't need to enter their own details i can add the decorator below which will capture their details:
+#@login_required
+def create_appointments(request):
+    if request.method == 'POST':
+        form = AppointmentsForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Appointment saved successfully')
+            return redirect('appointments')
+            # the redirect should match the view class
+    else:
+        form = AppointmentsForm()
+        messages.success(request, 'Appointment has not been saved successfully')
 
     
-#     return render(request, 'salon/add_appointments.html', {'form': form})
+    return render(request, 'salon/add_appointments.html', {'form': form})
 
 
-# def create_services_given(request):
-#     if request.method == 'POST':
-#         form = ServicesGivenForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             messages.success(request, 'Service given has been saved successfully')
-#             return redirect('add-services-given')
-#             # the redirect should match the view class
+def create_services_given(request):
+    if request.method == 'POST':
+        form = ServicesGivenForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Service given has been saved successfully')
+            return redirect('add-services-given')
+            # the redirect should match the view class
         
-#     else:
-#         form = ServicesGivenForm()
-#         messages.success(request, 'Service given has not been saved successfully')
+    else:
+        form = ServicesGivenForm()
+        messages.success(request, 'Service given has not been saved successfully')
 
     
-#     return render(request, 'salon/add_services_given.html', {'form': form})
+    return render(request, 'salon/add_services_given.html', {'form': form})
 
 
 

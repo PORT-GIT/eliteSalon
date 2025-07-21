@@ -20,7 +20,15 @@
 		<div>
 			{% block content %}
 
-			
+				<!-- {% if user.is_authenticated %}
+					<a href="{% url '../users/user-logout' %}"Log out></a>
+
+				{% else %}
+					<a href="{% url '../users/user-login' %}">Log in</a>
+
+					<a href="{% url '../users/register-customer' %}">Client Registration</a>
+
+				{% endif %} -->
 
 			{% endblock %}
 		</div>

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     'crispy_forms',
     'crispy_bootstrap5',
+    'slick_reporting',
 
     'users',
     'salon',
@@ -53,6 +54,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 
 
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/login/'
 
 

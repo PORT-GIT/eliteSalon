@@ -21,20 +21,6 @@
 
                 {{ form|crispy }}
 
-                <div class="datepicker">
-                    <label for="">{{ form.scheduleDay.label }}:</label>
-                    <input type="date" name="scheduleDay">
-                </div>
-
-                <div class="timepicker">
-                    <label for="">{{ form.startTime.label }}:</label>
-                    <input type="time" name="startTime">
-                </div>
-
-                <div class="endtimepicker">
-                    <label for="">{{ form.endTime.label }}:</label>
-                    <input type="time" name="endTime">
-                </div>
                 <button type="submit" class="btn btn-success">Save</button>
             </form>
         </div>
