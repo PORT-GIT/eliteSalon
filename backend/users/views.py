@@ -3,6 +3,12 @@ from django.shortcuts import render, redirect
 from .forms import EmployeeRegistrationForm, CustomerRegistrationForm
 # LoginForm
 
+# this is a view for the homepage 
+def homepage(request):
+
+    return render(request, 'users/home.html')
+
+
 def register_employee(request):
     if request.method == 'POST':
         form = EmployeeRegistrationForm(request.POST)

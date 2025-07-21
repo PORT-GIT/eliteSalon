@@ -13,6 +13,12 @@ urlpatterns = [
 
     # path('logout/', views.user_logout, name='user-logout'),
 
+    path('', views.homepage, name='homepage'),
+    # this will ensure that the homepage is accessible at the root URL
+
+
+
+    
     
 ]
 

@@ -149,6 +149,8 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [os.path.join (BASE_DIR / "static")]
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 # For production (not needed for development)
 # STATIC_ROOT = BASE_DIR / "staticfiles"
 

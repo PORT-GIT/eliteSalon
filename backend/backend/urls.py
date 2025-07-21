@@ -8,5 +8,5 @@ urlpatterns = [
 
     path('salon/', include("salon.urls")),
 
-    # path('reports/', include("reports.urls")),
+    path('reports/', include("reports.urls")),
 ]

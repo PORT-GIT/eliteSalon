@@ -4,10 +4,6 @@ from django.contrib import messages
 from .forms import ServiceForm, AppointmentsForm, ServicesGivenForm
 from .models import service, salonAppointment, servicesGiven
 
-# this is a view for the homepage 
-def homepage(request):
-
-    return render(request, '../templates/home.html')
 
 class ServicesGivenListView(ListView):
     model = servicesGiven
