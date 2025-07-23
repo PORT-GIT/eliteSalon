@@ -1,13 +1,14 @@
-<!-- {% extends "base.html" %}
+{% extends "base.html" %}
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <div class="login">
+    <div class="login container mt-5">
+
         <h2>Login Page</h2>
 
         <div class="login-form">
 
-            <form method="get">
+            <form method="post">
                 {% csrf_token %}
 
                 {{ form|crispy }}
@@ -18,4 +19,4 @@
     </div>
 
 
-{% endblock %} -->
+{% endblock %}
