@@ -1,16 +1,63 @@
 {% extends "base.html" %}
-
 {% block content %}
 
     <div class="header">
         <h1>Services</h1>
     </div>
 
+    <!-- this code will enable the services to be presented as cards
+     even when a new sevice is added it will be presented as a card -->
     <div class="services-list">
 
         {% if services %}
 
-        <table class="services">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for service in services %}
+
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ service.service_name }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ service.category }}</h6>
+                        <!-- <p class="card-text">{{ service.description }}</p> -->
+                        <p class="card-text"><strong>Price:</strong>{{ service.price }}</p>
+                        <p class="card-text">{{ service.durationOfService }}</p>
+
+                        <a href="{% url 'create-appointments' %}">
+                            <button class="btn btn-outline-success">Book Now</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+        </div>
+
+        {% else %}
+
+        <div class="message">
+            <p>No services found</p>
+        </div>
+
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+<!-- {% block scripts %}
+    <script>
+        // This script will handle the click event on the service card
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const serviceId = card.getAttribute('data-service-id');
+                window.location.href = `/services/${serviceId}/`;
+            });
+        });
+    </script>
+{% endblock %} -->
+
+<!-- 
+<table class="services">
             <thead>
                 <tr>
                     <th>Category</th>
@@ -34,14 +81,4 @@
                 {% endfor %}
             </tbody>
         </table>
-
-        {% else %}
-
-        <div class="message">
-            <p>No services found</p>
-        </div>
-
-        {% endif %}
-    </div>
-
-{% endblock %}
+-->
