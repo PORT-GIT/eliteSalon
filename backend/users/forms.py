@@ -40,6 +40,9 @@ class EmployeeRegistrationForm(BaseProfileForm):
         user.email = self.cleaned_data['email']
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
+        user.is_staff = False
+        user.is_superuser = False
+        # this makes the customer not have access to the admin panel
         if commit:
             user.save()
         profile = EmployeeProfile.objects.create(
@@ -73,6 +76,10 @@ class CustomerRegistrationForm(BaseProfileForm):
         user.email = self.cleaned_data['email']
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
+        user.is_staff = False
+        user.is_superuser = False
+        # this makes the customer not have access to the admin panel
+
         if commit:
             user.save()
 
