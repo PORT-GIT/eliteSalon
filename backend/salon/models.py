@@ -37,7 +37,7 @@ class salonAppointment(models.Model):
 
     
     def __str__(self):
-     return f"{self.id} - {self.customerId} - {self.employeeId} - {self.scheduleDay}"
+     return f" {self.customerId} - {self.employeeId} - {self.scheduleDay}"
 
 class servicesGiven(models.Model):
     RATINGS = (

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Appointment Details</h2>
+    <table class="table table-bordered table-responsive">
+        <tbody>
+            <tr>
+                <th>Appointment ID</th>
+                <td>{{ object.id }}</td>
+            </tr>
+            <tr>
+                <th>Customer Name</th>
+                <td>{{ object.customerId }}</td>
+            </tr>
+            <tr>
+                <th>Services</th>
+                <td>
+                    <ul>
+                    {% for service in object.services.all %}
+                        <li>{{ service.service_name }}</li>
+                    {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th>Employee Name</th>
+                <td>{{ object.employeeId }}</td>
+            </tr>
+            <tr>
+                <th>Appointment Day</th>
+                <td>{{ object.scheduleDay }}</td>
+            </tr>
+            <tr>
+                <th>Starting Time</th>
+                <td>{{ object.startTime }}</td>
+            </tr>
+            <tr>
+                <th>Ending Time</th>
+                <td>{{ object.endTime }}</td>
+            </tr>
+            <tr>
+                <th>Appointment Status</th>
+                <td>{{ object.appointmentStatus }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <a href="{% url 'appointments' %}" class="btn btn-secondary">Back to Appointments</a>
+</div>
+{% endblock %}

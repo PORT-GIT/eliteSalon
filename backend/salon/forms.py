@@ -17,7 +17,7 @@ class AppointmentsForm(forms.ModelForm):
 
     class Meta:
         model = salonAppointment
-        fields = ['customerId', 'services', 'employeeId', 'scheduleDay', 'appointmentStatus', 'startTime', 'endTime']
+        fields = ['services', 'employeeId', 'scheduleDay', 'appointmentStatus', 'startTime', 'endTime']
         
         # def __init__(self, *args, **kwargs):
         #     super(AppointmentsForm, self).__init__(*args, **kwargs)

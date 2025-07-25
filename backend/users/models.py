@@ -26,7 +26,7 @@ class EmployeeProfile(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.id)+"    "+self.user_profile.username +"   "+self.user_profile.email
+        return self.user_profile.username +"   "+self.user_profile.email
     # this means that the names of the employee will be shown in the UI and admin
 
 
@@ -38,4 +38,4 @@ class CustomerProfile(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.id)+"    "+self.user_profile.username +"   "+self.user_profile.email
+        return self.user_profile.username +"   "+self.user_profile.email
