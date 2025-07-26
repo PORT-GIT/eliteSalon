@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, DeleteView
 from django.contrib import messages
+from django.urls import reverse_lazy
 from .forms import ServiceForm, AppointmentsForm, ServicesGivenForm
 from .models import service, salonAppointment, servicesGiven
 from django.contrib.auth.decorators import login_required
@@ -35,6 +36,17 @@ class AppointmentsListView(ListView):
 class AppointmentDetailView(DetailView):
     model = salonAppointment
     template_name = 'salon/appointment_detail.html'
+
+class AppointmentDeleteView(DeleteView):
+    model = salonAppointment
+    template_name = 'salon/delete_appointment.html'
+    success_url = reverse_lazy('appointments')
+    # this will redirect me to the appointments page after deletion
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, 'Appointment was deleted successfully')
+        return super().delete(request, *args, **kwargs)
+    
 
 def create_services(request):
     if request.method == 'POST':
