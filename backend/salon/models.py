@@ -30,8 +30,9 @@ class salonAppointment(models.Model):
     employeeId = models.ForeignKey('users.EmployeeProfile', on_delete=models.CASCADE)
     scheduleDay = models.DateField()
     appointmentStatus = models.CharField(max_length=20, choices=APPOINTMENT_STATUS, default='PENDING')
-    startTime = models.TimeField()
-    endTime = models.TimeField()
+    appointmentTime = models.TimeField(null=False, blank=False)
+    appointmentEndTime = models.TimeField(null=False, blank=False)
+    # this will allow me to store the calculated time of the appointment and also the time it will end
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
 
