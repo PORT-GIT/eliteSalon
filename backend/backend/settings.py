@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'slick_reporting',
+    'formtools',
 
     'users',
     'salon',

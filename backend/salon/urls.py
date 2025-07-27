@@ -1,11 +1,19 @@
 from django.urls import path
 from . import views
+from .appointment_form_wizard import SelectServicesForm, SelectDateForm, ConfirmDetailsForm
+from .views import AppointmentWizard
+
+FORMS = [
+    ("select_services", SelectServicesForm),
+    ("select_date", SelectDateForm),
+    ("confirm", ConfirmDetailsForm),
+]
 
 
 urlpatterns = [
     path('create-services/', views.create_services, name='create-service'),
 
-    path('create-appointments/', views.create_appointments, name='create-appointments'),
+    path('create-appointments/', AppointmentWizard.as_view(), name='create-appointments'),
 
     path('create-services-given/', views.create_services_given, name='create-services-given'),
 
