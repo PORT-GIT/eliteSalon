@@ -1,12 +1,21 @@
 from django.urls import path
 from . import views
-from .appointment_form_wizard import SelectServicesForm, SelectDateForm, ConfirmDetailsForm
+from .appointment_form_wizard import SelectServicesForm, SelectDateForm, ConfirmDetailsForm, EmployeeSelectionForm
 from .views import AppointmentWizard
+
 
 FORMS = [
     ("select_services", SelectServicesForm),
     ("select_date", SelectDateForm),
+    ("select_employee", EmployeeSelectionForm),
     ("confirm", ConfirmDetailsForm),
+]
+
+TEMPLATES = [
+    ("select_services", "salon/select_services.html"),
+    ("select_date", "salon/select_date.html"),
+    ("select_employee", "salon/select_employee.html"),
+    ("confirm" , "salon/confirm_details.html"),
 ]
 
 

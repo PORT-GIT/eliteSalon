@@ -5,19 +5,22 @@ from django.urls import reverse_lazy
 from .forms import ServiceForm, ServicesGivenForm
 from .models import service, salonAppointment, servicesGiven
 from django.contrib.auth.decorators import login_required
+from django import forms
 # this imports will help in the view to calculate the time an appointment will take
 import re
-from datetime import datetime, timedelta
+from datetime import time, datetime, timedelta
 from formtools.wizard.views import SessionWizardView
-from .appointment_form_wizard import SelectServicesForm, SelectDateForm, ConfirmDetailsForm
+from .appointment_form_wizard import SelectServicesForm, SelectDateForm, ConfirmDetailsForm, EmployeeSelectionForm
 # this will help in the employee assignment to the appointment
 from django.db.models import Count, Q
 from users.models import EmployeeProfile
+from django.db import transaction
+from django.utils import timezone
 
 class ServicesGivenListView(ListView):
     model = servicesGiven
     template_name = 'salon/services_given.html'
-    context_object_name = 'services-given'
+    context_object_name = 'services_given'
 
     def get_queryset(self):
         return servicesGiven.objects.all()
@@ -57,7 +60,6 @@ def create_services(request):
         form = ServiceForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Service saved successfully')
             return redirect('services')
             # the redirect should match the view class
 
@@ -99,8 +101,12 @@ def total_services_duration(services):
 # this function determines the endtime of the appointment based on the start time and the duration of service
 def calculate_end_time(start_time, duration_minutes):
     # this function will calculate the end time of an appointment given the start time and duration in minutes
-    dummy_date = datetime(2000, 1, 1, start_time.hour, start_time.minute, start_time.second)
-    end_datetime = dummy_date + timedelta(minutes=duration_minutes)
+    # Combine with today's date using timezone
+    now = timezone.now()
+    start_datetime = timezone.make_aware(
+        datetime.combine(now.date(), start_time)
+    )
+    end_datetime = start_datetime + timedelta(minutes=duration_minutes)
     return end_datetime.time()
 
 FORMS = [
@@ -129,71 +135,121 @@ class AppointmentWizard(SessionWizardView):
             context.update({'grouped_services': grouped_services})
         return context
     
+    def get_form_kwargs(self, step=None):
+        kwargs = super().get_form_kwargs(step)
+        return kwargs
+
     def get_form(self, step=None, data=None, files=None):
         form = super().get_form(step, data, files)
-        if step  == 'services':
-            # this will ensure that the form is populated with the services available
-            # it will also override the form's queryset to include all services
+        if step == 'select_services':
             form.fields['services'].queryset = service.objects.all()
-
+        elif step == 'confirm':
+            cleaned_data = self.get_cleaned_data_for_step('select_date') or {}
+            schedule_day = cleaned_data.get('scheduleDay')
+            if schedule_day:
+                available_times = self.get_available_times_slots(schedule_day)
+                form.fields['appointmentTime'] = forms.ChoiceField(
+                    choices=[(t.strftime("%H:%M"), t.strftime("%I:%M %p")) for t in available_times],
+                    label="Select Appointment Time"
+                )
         return form
     
-    def done(self, form_list, **kwargs):
-        # all the data from the forms will be processed here to create an appointment
-        services_form = form_list[0]
-        date_form = form_list[1]
-        confirm_form = form_list[2]
+    def get_available_times_slots(self, schedule_day):
+        # i want to define the working hours of the salon
+        start_work = time(9, 0) 
+        # this means that work hours start at 9.00AM
+        end_work = time(17, 0)
+        # this means that work hours end at 5.00PM
+        slot_duration = 30
+        # each slot gets 30 minutes
 
-        services = services_form.cleaned_data['services']
-        schedule_day = date_form.cleaned_data['scheduleDay']
-        appointment_time = confirm_form.cleaned_data['appointmentTime']
+        # this will get all appointments for the selected day
+        appointments = salonAppointment.objects.filter(scheduleDay = schedule_day)
 
-        # this section will handle the employee selection
-        # this will assign employees who offer  at least on of the services selected by customer
-        # this means that a user can be served by multiple employees
-        service_ids = [service.id for service in services]
-        employees = EmployeeProfile.objects.filter(
-            services_to_offer__in=service_ids, work_status='FREE'
-        ).distinct()
+        # it will compute booking time ranges
+        booked_ranges = []
+        for appt in appointments:
+            start = datetime.combine(schedule_day, appt.appointmentTime)
+            end = datetime.combine(schedule_day, appt.appointmentEndTime)
+            
+            booked_ranges.append((start, end))
 
-        # this will filter employees who are available on the selected schedule day and time
-        # and it will check the existing appointments to avoid conflicts
-        available_employees = []
-        for employee in employees:
-            conflicting_appointments = employee.salonappointment_set.filter(
-                scheduleDay=schedule_day,
-                appointmentTime=appointment_time
-            )
-            if not conflicting_appointments.exists():
-                available_employees.append(employee)
+        # this function will generate all available slots
+        slots = []
+        current = datetime.combine(schedule_day, start_work)
+        end = datetime.combine(schedule_day, end_work)
+        while current + timedelta(minutes=slot_duration) <= end:
+            # this will check if there is an appointment in this slot
+            slots.append(current.time())
+            current += timedelta(minutes=slot_duration)    
 
-        if not available_employees:
-            messages.error(self.request, 'No available employees for the selected service and time')
-            return redirect('homepage')
+        # this will filter out the slots that are already taken by appointments
+        free_slots = []
+        for slot in slots:
+            slot_start = datetime.combine(schedule_day, slot)
+            slot_end = slot_start + timedelta(minutes=slot_duration)
+
+            # this will check if slots overlap over booked time ranges
+            
+            if not any (slot_start < end and slot_end > start for start, end in booked_ranges):
+                
+                free_slots.append(slot)
         
-        # this will assign all available employees
-        assigned_employees = available_employees
+        return free_slots
+            
 
+    def done(self, form_list, **kwargs):
+        with transaction.atomic():
+            # this will ensure that all the forms are valid before proceeding    
+         # all the data from the forms will be processed here to create an appointment
+            services_form = form_list[0]
+            date_form = form_list[1]
+            confirm_form = form_list[2]
 
-        # this will create the appointment for each assigned employee
-        for assigned_employee in assigned_employees:
+            services = services_form.cleaned_data['services']
+            schedule_day = date_form.cleaned_data['scheduleDay']
+            appointment_time_str = confirm_form.cleaned_data['appointmentTime']
+            appointment_time = datetime.strptime(appointment_time_str, "%H:%M").time()
+
+            # Find an available employee who offers the selected service categories and is free at the appointment time
+            categories = set(svc.category for svc in services)
+            employees = EmployeeProfile.objects.filter(
+                services_to_offer__category__in=categories,
+                work_status='FREE'
+            ).distinct()
+
+            assigned_employee = None
+            for employee in employees:
+                conflicting_appointments = employee.salonappointment_set.filter(
+                    scheduleDay=schedule_day,
+                    appointmentTime__lt=calculate_end_time(appointment_time, total_services_duration(services)),
+                    appointmentEndTime__gt=appointment_time
+                )
+                if not conflicting_appointments.exists():
+                    assigned_employee = employee
+                    break
+
+            if not assigned_employee:
+                messages.error(self.request, 'No available employee found for the selected services and time.')
+                return redirect('homepage')
 
             total_duration = total_services_duration(services)
             appointment_end_time = calculate_end_time(appointment_time, total_duration)
 
+            # Create the appointment
             appointment = salonAppointment.objects.create(
                 customerId=self.request.user.customer_profile,
                 scheduleDay=schedule_day,
                 appointmentTime=appointment_time,
-                appointmentEndTime = appointment_end_time,
+                appointmentEndTime=appointment_end_time,
                 employeeId=assigned_employee,
                 appointmentStatus='PENDING'
             )
             appointment.services.set(services)
             appointment.save()
 
-        messages.success(self.request, 'Appointment was created successfully')
-        return redirect('appointments')
+            messages.success(self.request, 'Appointment was created successfully')
+            return redirect('appointments')
 
 
 def create_services_given(request):

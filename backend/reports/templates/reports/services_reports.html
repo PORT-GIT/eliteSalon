@@ -1,0 +1,49 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Services Report</title>
+</head>
+<body>
+    <h1>Services Offered in the Salon</h1>
+    <p>Total number of services offered: {{ total_services }}</p>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Services Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Services Offered in the Salon</h1>
+    <p>Total number of services offered: {{ total_services }}</p>
+
+    <canvas id="servicesChart" width="400" height="200"></canvas>
+
+    <script>
+        const ctx = document.getElementById('servicesChart').getContext('2d');
+        const servicesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ service_names|safe }},
+                datasets: [{
+                    label: 'Number of Times Service Given',
+                    data: {{ service_counts|safe }},
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        precision: 0
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

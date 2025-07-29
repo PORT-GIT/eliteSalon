@@ -48,7 +48,7 @@ class servicesGiven(models.Model):
     ('4', '4'),
     ('5', '5'),
     )
-
+    # change selection from string
     id = models.AutoField(primary_key=True)#this will enable the auto-increment factor
     salonAppointmentId = models.ForeignKey(salonAppointment, on_delete=models.SET_NULL, null=True, to_field='id')#sometimes a client cannot have an appointment  
     servicesId = models.ForeignKey(service, to_field='id', on_delete=models.CASCADE)
