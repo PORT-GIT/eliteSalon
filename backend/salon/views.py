@@ -25,13 +25,23 @@ class ServicesGivenListView(ListView):
     def get_queryset(self):
         return servicesGiven.objects.all()
     
-class ServicesListView(ListView):
-    model = service
-    template_name = 'salon/services_list.html'
-    context_object_name = 'services'
+def list_of_services(request):
 
-    def get_queryset(self):
-        return service.objects.all()
+    return render(request, 'salon/services_list.html')
+
+
+def book_appointments(request):
+
+    return render(request, 'salon/appointments.html')
+
+    
+# class ServicesListView(ListView):
+#     model = service
+#     template_name = 'salon/services_list.html'
+#     context_object_name = 'services'
+
+#     def get_queryset(self):
+#         return service.objects.all()
 
 class AppointmentsListView(ListView):
     model = salonAppointment

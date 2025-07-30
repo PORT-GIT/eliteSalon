@@ -8,6 +8,10 @@ from .decorator import employee_required, customer_required, admin_required
 def homepage(request):
     return render(request, 'users/home.html')
 
+def contact_us(request):
+    return render(request, 'users/contact-us.html')
+
+
 @employee_required
 def employee_dashboard(request):
     return render(request, 'users/employee_dashboard.html')

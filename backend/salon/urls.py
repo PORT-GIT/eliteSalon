@@ -22,9 +22,13 @@ TEMPLATES = [
 urlpatterns = [
     path('create-services/', views.create_services, name='create-service'),
 
-    path('create-appointments/', AppointmentWizard.as_view(), name='create-appointments'),
+    # path('create-appointments/', AppointmentWizard.as_view(), name='create-appointments'),
+
+    path('book-appointments/', views.book_appointments, name='book-appointments'),
 
     path('create-services-given/', views.create_services_given, name='create-services-given'),
+
+    path('services-list/', views.list_of_services, name='services-list'),
 
     path('services-given/', views.ServicesGivenListView.as_view(), name='services-given'),
 
@@ -34,6 +38,6 @@ urlpatterns = [
 
     path('appointments/<int:pk>/delete', views.AppointmentDeleteView.as_view(), name='delete-appointment'),
 
-    path('services/', views.ServicesListView.as_view(), name='services'),
+    # path('services/', views.ServicesListView.as_view(), name='services'),
 
 ]
