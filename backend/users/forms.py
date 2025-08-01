@@ -31,6 +31,22 @@ class EmployeeRegistrationForm(BaseProfileForm):
     services_to_offer = forms.ModelMultipleChoiceField(queryset=service.objects.all(),
         widget=forms.CheckboxSelectMultiple, required=True, label='Services to Offer')
     
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # this will now add bootstrap classes to the field widgets
+        for field_name, field in self.fields.items():
+            # i will not need form-control for the multiple selection services fields
+            if field_name == 'services_to_offer':
+                
+                continue
+            if field.widget.attrs.get('class'):
+                field.widget.attrs['class'] += ' form-control'
+            else:
+                field.widget.attrs['class'] = 'form-control'
+
+            # this will add the placeholder to the field widgets
+            field.widget.attrs['placeholder'] = field.label
+    
     class Meta:
         model = User
         fields = ['username'] + COMMON_FIELDS + ['password1', 'password2', 'services_to_offer']
@@ -106,6 +122,19 @@ class EmployeeRegistrationForm(BaseProfileForm):
 
 
 class CustomerRegistrationForm(BaseProfileForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # this will now add bootstrap classes to the field widgets
+        for field_name, field in self.fields.items():
+            if field.widget.attrs.get('class'):
+                field.widget.attrs['class'] += ' form-control'
+            else:
+                field.widget.attrs['class'] = 'form-control'
+
+            # this will add the placeholder to the field widgets
+            field.widget.attrs['placeholder'] = field.label
+
+
     class Meta:
         model = User
         fields = ['username'] + COMMON_FIELDS + ['password1', 'password2']
@@ -158,28 +187,10 @@ class CustomerRegistrationForm(BaseProfileForm):
 #                 raise forms.ValidationError("Passwords do not match!")
 #             return cleaned_data
 
+
+class ContactUsForm(forms.ModelForm):
+    pass
     
     
 
     
-# def clean_email(self):
-#     email = self.cleaned_data.get('email')
-#     if CustomUser.objects.filter(email=email).exists():
-#         raise forms.ValidationError("This email already exists!")
-#     return email
-
-# def clean(self):
-#     cleaned_data = super().clean()
-#     if cleaned_data.get("password1") != cleaned_data.get("password2"):
-#         raise forms.ValidationError("Passwords do not match!")
-#     return cleaned_data
-
-# def save(self, commit = True):
-#     user = super().save(commit=False)
-#     user.set_password(self.cleaned_data["password1"])
-#     user.role = CustomUser.CUSTOMER
-#     # this sets the role automatically
-#     if commit:
-#         user.save()
-
-#     return user
