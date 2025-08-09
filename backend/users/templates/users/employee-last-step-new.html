@@ -1,0 +1,130 @@
+{% extends "employee-wizard.html" %}
+{% load static %}
+
+{% block content %}
+
+	<div class="image-container set-full-height" style="background-image: url('{% static "wizard-assets/img/wizard-book.jpg" %}')">
+	    
+	    <!--   Big container   -->
+	    <div class="container">
+	        <div class="row">
+		        <div class="col-sm-9 col-sm-offset-2">
+		            <!--      Wizard container        -->
+		            <div class="wizard-container">
+		                <div class="card wizard-card" data-color="red" id="wizardProfile">
+		                    <form action="{% url 'employee-register-step' step=3 %}" method="post">
+		                		<!--        You can switch " data-color="blue" "  with one of the next bright colors: "green", "orange", "red", "purple"             -->
+								{% csrf_token %}
+		                    	<div class="wizard-header">
+		                        	<h3 class="wizard-title">Employee Registration</h3>
+									<h5>Select the services you want to offer</h5>
+		                    	</div>
+
+		                        <div class="tab-content">
+		                            <div class="tab-pane active" id="step3">
+		                            	<div class="row">
+		                            		<div class="col-sm-10 col-sm-offset-1">
+		                            			<h4 class="info-text">Select the services you want to offer</h4>
+		                            			
+		                            			<!-- Service Category Dropdown -->
+		                            			<div class="form-group">
+		                            				<label>Select Service Category:</label>
+		                            				<select class="form-control" id="service_category" name="service_category">
+		                            					<option value="">-- All Categories --</option>
+		                            					{% for category in categories %}
+		                            						<option value="{{ category }}">{{ category }}</option>
+		                            					{% endfor %}
+		                            				</select>
+		                            			</div>
+		                            			
+		                            			<!-- Services Checkboxes -->
+		                            			<div class="form-group" id="services-container">
+		                            				<label>Select Services to Offer:</label>
+		                            				<div id="services-list">
+		                            					{% for category, services in services_by_category.items %}
+		                            						<div class="category-group" data-category="{{ category }}" style="margin-bottom: 20px; display: none;">
+		                            							<h5 style="color: #e91e63; margin-bottom: 10px;">{{ category }}</h5>
+		                            							<div class="row">
+		                            								{% for service in services %}
+		                            									<div class="col-sm-6 form-check">
+		                            										<input type="checkbox" 
+		                            											name="services_to_offer" 
+                                                                                class="form-check-input"  id="service_{{ service.id }}" value="{{ service.id }}"
+		                            											{% if service.id in form.services_to_offer.value %}checked{% endif %}>
+		                            											{{ service.service_name }}
+                                                                                
+                                                
+		                            									</div>
+		                            								{% endfor %}
+		                            							</div>
+		                            						</div>
+		                            					{% endfor %}
+		                            				</div>
+		                            			</div>
+		                            			
+		                            			
+		                            			<!-- Form Errors -->
+		                            			{% if form.errors %}
+		                            				<div class="alert alert-danger">
+		                            					{% for field in form %}
+		                            						{% for error in field.errors %}
+		                            							<p>{{ error }}</p>
+		                            						{% endfor %}
+		                            					{% endfor %}
+		                            				</div>
+		                            			{% endif %}
+		                            		</div>
+		                            	</div>
+		                            </div>
+		                        </div>
+	                        	<div class="wizard-footer">
+	                            	<div class="pull-right">
+										<button type="submit" class='btn btn-finish btn-fill btn-danger btn-wd'>Finish</button>
+	                                </div>
+	                                <div class="pull-left">
+										<a href="{% url 'employee-register-step' step=2 %}">
+											<input type='button' class='btn btn-previous btn-fill btn-default btn-wd' name='previous' value='Previous' />
+										</a>
+	                                </div>
+	                                <div class="clearfix"></div>
+	                        	</div>
+		                    </form>
+		                </div>
+		            </div> <!-- wizard container -->
+		        </div>
+	    	</div> <!-- row -->
+		</div> <!--  big container -->
+
+	    <div class="container text-center">
+	             Made with <i class="fa fa-heart heart"></i> by Margaret.Kairu
+	        </div>
+	    </div>
+	</div>
+
+	<!-- JavaScript for Category Filtering -->
+	<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const categorySelect = document.getElementById('service_category');
+		const serviceGroups = document.querySelectorAll('.category-group');
+		
+        // this will show all the services initially
+        serviceGroups.forEach(group => {
+            group.style.display = 'block';
+        });
+        
+		// Handle category filtering
+		categorySelect.addEventListener('change', function() {
+			const selectedCategory = this.value;
+			
+			serviceGroups.forEach(group => {
+				if (selectedCategory === '' || group.dataset.category === selectedCategory) {
+					group.style.display = 'block';
+				} else {
+					group.style.display = 'none';
+				}
+			});
+		});
+	});
+	</script>
+
+{% endblock %}

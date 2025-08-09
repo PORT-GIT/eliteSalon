@@ -1,0 +1,125 @@
+{% extends "employee-wizard.html" %}
+{% load static %}
+
+{% block content %}
+
+	<div class="image-container set-full-height" style="background-image: url(' {% static 'wizard-assets/img/wizard-profile.jpg' %}');">
+	    
+	    <!--   Big container   -->
+	    <div class="container">
+	        <div class="row">
+		        <div class="col-sm-9 col-sm-offset-2">
+		            <!--      Wizard container        -->
+		            <div class="wizard-container">
+		                <div class="card wizard-card" data-color="green" id="wizardProfile">
+		                    <form action="{% url 'employee-register-step' step=1 %}" method="post">
+		                		<!-- You can switch " data-color="purple" "  with one of the next bright colors: "green", "orange", "red", "blue"       -->
+								{% csrf_token %}
+		                    	<div class="wizard-header">
+		                        	<h3 class="wizard-title">Employee Registration</h3>
+
+									<h5>This information will let us know more about you.</h5>
+
+		                    	</div>
+								<div class="wizard-navigation">
+									<ul>
+			                            <li><a href="#step1" data-toggle="tab">Step 1</a></li>
+			                            <li><a href="#step2" data-toggle="tab">Step 2</a></li>
+			                            <li><a href="#step3" data-toggle="tab">Address</a></li>
+			                        </ul>
+								</div>
+
+		                        <div class="tab-content">
+		                            <div class="tab-pane active" id="step1">
+		                              	<div class="row">
+
+		                                	<div class=" col-sm-5 col-sm-offset-1">
+		                                    	<div class=" form-group label-floating">
+													<input type="text" class="form-control" id
+														="username" name="username" value="{{ form.username.value|default_if_none:'' }}" required placeholder="Enter Username">
+													{% if form.username.errors %}
+														<span class="text-danger">{{ form.username.errors }}</span>
+													{% endif %}
+		                                    	</div>
+
+												
+		                                    	<div class="form-group label-floating">
+													<input type="text" class="form-control" id
+														="firstname" name="firstname" value="{{ form.first_name.value|default_if_none:'' }}" required placeholder="Enter First Name">
+													{% if form.first_name.errors %}
+														<span class="text-danger">{{ form.first_name.errors }}</span>
+													{% endif %}
+		                                    	</div>
+
+		                                	</div>
+
+											<div class="col-sm-5 col-sm-offset-1">
+												<div class="form-group label-floating">
+													<input type="email" class="form-control" id="email" name="email" value="{{ form.email.value|default_if_none:'' }}" required placeholder="Enter Email">
+													{% if form.email.errors %}
+														<span class="text-danger">{{ form.email.errors }}</span>
+													{% endif %}
+		                                    	</div>
+
+												<div class="form-group label-floating">
+													<input type="text" class="form-control" id
+														="lastname" name="lastname" value="{{ form.last_name.value|default_if_none:'' }}" required placeholder="Enter Last Name">
+													{% if form.last_name.errors %}
+														<span class="text-danger">{{ form.last_name.errors }}</span>
+													{% endif %}
+		                                    	</div>
+		                                	</div>
+
+											<div class="col-sm-5 col-sm-offset-1 ">
+		                                    	<div class="form-group label-floating">
+													<input type="password" class="form-control" id
+														="password1" name="password1" value="{{ form.password1.value|default_if_none:'' }}" required placeholder="Enter Password">
+													{% if form.password1.errors %}
+														<span class="text-danger">{{ form.password1.errors }}</span>
+													{% endif %}
+		                                    	</div>
+
+												<div class="form-group label-floating">
+													<input type="password" class="form-control" id
+														="password2" name="Confirm password" value="{{ form.password2.value|default_if_none:'' }}" required placeholder="Confirm Password">
+													{% if form.password2.errors %}
+														<span class="text-danger">{{ form.password2.errors }}</span>
+													{% endif %}
+		                                    	</div>
+		                                	</div>
+		                                	
+		                            	</div>
+		                            </div>
+		                            
+									<div class="wizard-footer">
+										<div class="pull-right">
+											<a href="{% url 'employee-register-step' step=2 %}">
+												<input type='button' class='btn btn-next btn-fill btn-success btn-wd' name='next' value='Next' />
+											</a>
+											
+											<input type='button' class='btn btn-finish btn-fill btn-success btn-wd' name='finish' value='Finish' />
+										</div>
+
+										<div class="pull-left">
+											<a href="{% url 'homepage' %}">
+												<input type='button' class='btn btn-previous btn-fill btn-default btn-wd' name='previous' value='Previous' />
+											</a>
+											
+										</div>
+										<div class="clearfix"></div>
+									</div>
+		                    </form>
+		                </div>
+		            </div> <!-- wizard container -->
+		        </div>
+	        </div><!-- end row -->
+	    </div> <!--  big container -->
+
+	    <div class="footer">
+	        <div class="container text-center">
+	             Made with <i class="fa fa-heart heart"></i> by Margaret Kairu
+	        </div>
+	    </div>
+	</div>
+
+{% endblock %}

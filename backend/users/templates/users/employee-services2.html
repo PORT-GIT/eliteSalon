@@ -1,0 +1,79 @@
+{% extends "employee-wizard.html" %}
+{% load static %}
+
+{% block content %}
+
+	<div class="image-container set-full-height" style="background-image: url({% static 'wizard-assets/img/wizard-city.jpg' %});">
+	    
+	    <!--   Big container   -->
+	    <div class="container">
+	        <div class="row">
+		        <div class="col-sm-9 col-sm-offset-2">
+		            <!--      Wizard container        -->
+		            <div class="wizard-container">
+		                <div class="card wizard-card" data-color="purple" id="wizard">
+			                <form action="{% url 'employee-register-step' step=2 %}" method="post">
+			                <!--        You can switch " data-color="rose" "  with one of the next bright colors: "blue", "green", "orange", "purple"        -->
+								{% csrf_token %}
+		                    	<div class="wizard-header">
+		                        	<h3 class="wizard-title">Employee Registration</h3></h3>
+									<h5>This information will let us know more about you.</h5>
+		                    	</div>
+
+		                        <div class="tab-content">
+		                            <div class="tab-pane active" id="step2">
+		                            	<div class="row">
+		                                	<div class=" col-sm-5 col-sm-offset-1">
+		                                    	<div class=" form-group label-floating">
+													<input type="tel" class="form-control" id
+														="phone_number" name="phone_number" value="{{ form.phone_number.value|default_if_none:'' }}" required placeholder="Enter Phone Number">
+													{% if form.phone_number.errors %}
+														<span class="text-danger">{{ form.phone_number.errors }}</span>
+													{% endif %}
+		                                    	</div>
+
+												
+		                                    	<div class="form-group label-floating">
+													<input type="date" class="form-control" id
+														="dateofbirth" name="dateofbirth" value="{{ form.date_of_birth.value|default_if_none:'' }}" required placeholder="Enter Date of Birth">
+													{% if form.date_of_birth.errors %}
+														<span class="text-danger">{{ form.date_of_birth.errors }}</span>
+													{% endif %}
+		                                    	</div>
+
+		                                	</div>
+
+		                                </div>
+		                            </div>
+		                        </div>
+		                        <div class="wizard-footer">
+	                            	<div class="pull-right">
+										<a href="{% url 'employee-register-step' step=3 %}">
+											<input type='button' class='btn btn-next btn-fill btn-primary btn-wd' name='next' value='Next' />
+										</a>
+	                                    
+	                                    <input type='button' class='btn btn-finish btn-fill btn-primary btn-wd' name='finish' value='Finish' />
+	                                </div>
+	                                <div class="pull-left">
+										<a href="{% url 'employee-register-step' step=1%}">
+											<input type='button' class='btn btn-previous btn-fill btn-default btn-wd' name='previous' value='Previous' />
+										</a>
+	                                    
+	                                </div>
+		                            <div class="clearfix"></div>
+		                        </div>
+			                </form>
+		                </div>
+		            </div> <!-- wizard container -->
+		        </div>
+	        </div> <!-- row -->
+	    </div> <!--  big container -->
+
+	    <div class="footer">
+	        <div class="container text-center">
+	             Made with <i class="fa fa-heart heart"></i> by Margaret Kairu
+	        </div>
+	    </div>
+	</div>
+
+{% endblock %}

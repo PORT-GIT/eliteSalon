@@ -1,11 +1,15 @@
 from django.urls import path
 from . import views
+from .wizard_views import EmployeeRegistrationWizard
 
 urlpatterns = [
     
-    # path("", views.chat, name="chat"),
+    # Traditional registration (can be removed if wizard is preferred)
+    # path('register-employee/', views.register_employee, name='register-employee'),
 
-    path('register-employee/', views.register_employee, name='register-employee'),
+    # Multi-step wizard registration
+    path('register-employee-wizard/', EmployeeRegistrationWizard.as_view(), name='employee-register-wizard'),
+    path('register-employee-wizard/<int:step>/', EmployeeRegistrationWizard.as_view(), name='employee-register-step'),
 
     path('register-customer/', views.register_customer, name='register-customer'),
 

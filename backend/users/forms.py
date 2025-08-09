@@ -171,21 +171,6 @@ class CustomerRegistrationForm(BaseProfileForm):
             raise forms.ValidationError("Passwords do not match!")
         return cleaned_data
 
-# class LoginForm(forms.ModelForm):
-#     username = forms.CharField(widget=forms.TextInput(attrs={'type' : 'text'}))
-#     email = forms.EmailField(widget=forms.EmailInput(attrs={'type' : 'email'}))
-#     password1 = forms.CharField(widget=forms.PasswordInput, label='Password')
-#     password2 = forms.CharField(widget=forms.PasswordInput, label='Confirm Password')
-
-#     class Meta:
-#         model = User
-#         fields = ['username', 'email', 'password1', 'password2']
-
-#         def clean(self):
-#             cleaned_data = super().clean()
-#             if cleaned_data.get("password1") != cleaned_data.get("password2"):
-#                 raise forms.ValidationError("Passwords do not match!")
-#             return cleaned_data
 
 
 class ContactUsForm(forms.ModelForm):
