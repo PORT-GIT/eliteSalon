@@ -20,7 +20,6 @@ urlpatterns = [
     path('', views.homepage, name='homepage'),
     # this will ensure that the homepage is accessible at the root URL
 
-    path('contact-us/', views.contact_us, name='contact-us'),
     
 ]
 

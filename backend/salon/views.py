@@ -29,6 +29,10 @@ def list_of_services(request):
 
     return render(request, 'salon/services_list.html')
 
+def about_us(request):
+
+    return render(request, 'salon/about-us.html')
+
 
 def book_appointments(request):
 

@@ -1,0 +1,311 @@
+:root {
+  --default-font: "Roboto",  system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --heading-font: "Lato",  sans-serif;
+  --nav-font: "Raleway",  sans-serif;
+}
+
+/* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
+:root { 
+  --background-color: #ffffff; /* Background color for the entire website, including individual sections */
+  --default-color: #4d4643; /* Default color used for the majority of the text content across the entire website */
+  --heading-color: #2b2320; /* Color for headings, subheadings and title throughout the website */
+  --accent-color: #f03c02; /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
+  --surface-color: #ffffff; /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
+  --contrast-color: #ffffff; /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
+}
+
+/* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
+:root {
+  --nav-color: #212529;  /* The default color of the main navmenu links */
+  --nav-hover-color: #f03c02; /* Applied to main navmenu links when they are hovered over or active */
+  --nav-mobile-background-color: #ffffff; /* Used as the background color for mobile navigation menu */
+  --nav-dropdown-background-color: #ffffff; /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
+  --nav-dropdown-color: #212529; /* Used for navigation links of the dropdown items in the navigation menu. */
+  --nav-dropdown-hover-color: #f03c02; /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
+}
+
+/* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
+
+.light-background {
+  --background-color: #ececec;
+  --surface-color: #ffffff;
+}
+
+.dark-background {
+  --background-color: #060606;
+  --default-color: #ffffff;
+  --heading-color: #ffffff;
+  --surface-color: #252525;
+  --contrast-color: #ffffff;
+}
+
+/* Smooth scroll */
+:root {
+  scroll-behavior: smooth;
+
+}
+
+.navmenu a,
+  .navmenu a:focus {
+    color: var(--nav-color);
+    padding: 18px 12px;
+    font-size: 13px;
+    font-family: var(--nav-font);
+    font-weight: 500;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    white-space: nowrap;
+    transition: 0.3s;
+  }
+
+/*--------------------------------------------------------------
+# Hero Section
+--------------------------------------------------------------*/
+
+.hero .carousel {
+  width: 100%;
+  min-height: 70vh;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+
+@media (max-height: 500px),
+(max-width: 580px) {
+  .hero .carousel {
+    min-height: 80vh;
+    /* this reduces the height of the image when on a smaller screen */
+  }
+}
+
+.hero img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+.carousel-item .home h1 {
+  margin-bottom: 20px;
+  font-size: 70px;
+  font-weight: 700;
+}
+
+.carousel-item .container {
+  position: relative;
+  text-align: center;
+  background: color-mix(in srgb, var(--background-color), transparent 40%);
+  padding-top: 50px;
+  padding-bottom: 50px;
+  margin-bottom: 50px;
+  border-top: 4px solid var(--accent-color);
+  z-index: 3;
+}
+
+@media (max-width: 768px) {
+    .carousel-item .home {
+        margin-right: 100px;
+    }
+
+  .carousel-item .home h1 {
+    font-size: 30px;
+    text-align: center;
+  }
+
+  .carousel-item .home p {
+    text-align: center;
+  }
+
+  .carousel-item .btn-get-started {
+    text-align: center;
+  }
+}
+
+.hero .btn-get-started {
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 1px;
+  display: inline-block;
+  padding: 8px 32px;
+  transition: 0.5s;
+  margin: 10px;
+  border-radius: 20px;
+  color: var(--contrast-color);
+  border: 2px solid var(--accent-color);
+}
+
+.hero .btn-get-started:hover {
+  background: var(--accent-color);
+}
+
+/*--------------------------------------------------------------
+# Hero Section
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# Immerse Yourself Section
+--------------------------------------------------------------*/
+.call-to-action {
+  padding: 50px 0;
+  position: relative;
+  clip-path: inset(0);
+  background-color: var(--default-color);
+}
+
+.call-to-action .container {
+  position: relative;
+  z-index: 3;
+}
+
+.call-to-action .immerse-text {
+  padding: 100px 0;
+}
+
+.call-to-action h1 {
+  color: var(--contrast-color);
+  font-size: 40px;
+  font-weight: 700;
+}
+
+.call-to-action p {
+  color: var(--contrast-color);
+  margin-top: 20px;
+}
+
+.call-to-action .cta-btn {
+  background-color: var(--surface-color);
+  color: var(--accent-color);
+  font-family: var(--heading-font);
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 1px;
+  display: inline-block;
+  padding: 12px 40px;
+  border-radius: 4px;
+  transition: 0.5s;
+  margin: 8px;
+  border: 2px solid var(--accent-color);
+  border-radius: 30px;
+}
+
+.call-to-action .cta-btn:hover {
+  background: var(--accent-color);
+  color: var(--contrast-color);
+}
+
+.call-to-action img {
+  border-radius: 10px;
+  text-align: center;
+  margin-left: 120px;
+}
+
+/*--------------------------------------------------------------
+# Immerse Yourself Section
+--------------------------------------------------------------*/
+
+
+/*--------------------------------------------------------------
+# Homepage End Section
+--------------------------------------------------------------*/
+.home-end {
+  padding: 0;
+}
+
+.home-end .end {
+  width: 100%;
+  min-height: 70vh;
+  padding: 0;
+  margin: 0;
+  position: relative;  
+}
+
+@media (max-height: 500px), (max-width:580px) {
+  .home-end .end {
+    min-height: 40vh;
+    /* this reduces the height of the image when on a smaller screen */
+  }
+}
+
+.home-end img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.home-end .container {
+  position: relative;
+  text-align: center;
+  background: color-mix(in srgb, var(--background-color), transparent 40%);
+  padding-top: 50px;
+  padding-bottom: 50px;
+  margin-bottom: 50px;
+  border-top: 4px solid var(--accent-color);
+  z-index: 3;
+}
+
+.home-end .end-item {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.home-end .end-item:before {
+  content: "";
+  background: color-mix(in srgb, var(--background-color), transparent 80%);
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+@media (max-width: 1200px) {
+  .home-end .container {
+    margin-left: 50px;
+    margin-right: 50px;
+  }
+}
+
+.home-end h1 {
+  margin-bottom: 20px;
+  font-size: 36px;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .home-end h1 {
+    font-size: 30px;
+  }
+}
+
+.home-end .btn-get-started {
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 1px;
+  display: inline-block;
+  padding: 8px 32px;
+  transition: 0.5s;
+  margin: 10px;
+  border-radius: 10px;
+  color: var(--contrast-color);
+  border: 2px solid var(--accent-color);
+}
+
+.home-end .btn-get-started:hover {
+  background: var(--accent-color);
+}
+
+/*--------------------------------------------------------------
+# Homepage End Section
+--------------------------------------------------------------*/

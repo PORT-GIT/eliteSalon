@@ -11,51 +11,6 @@
 # Help: https://bootstrapmade.com/color-system/
 --------------------------------------------------------------*/
 /* Fonts */
-:root {
-  --default-font: "Roboto",  system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --heading-font: "Lato",  sans-serif;
-  --nav-font: "Raleway",  sans-serif;
-}
-
-/* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
-:root { 
-  --background-color: #ffffff; /* Background color for the entire website, including individual sections */
-  --default-color: #4d4643; /* Default color used for the majority of the text content across the entire website */
-  --heading-color: #2b2320; /* Color for headings, subheadings and title throughout the website */
-  --accent-color: #f03c02; /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
-  --surface-color: #ffffff; /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
-  --contrast-color: #ffffff; /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
-}
-
-/* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
-:root {
-  --nav-color: #212529;  /* The default color of the main navmenu links */
-  --nav-hover-color: #f03c02; /* Applied to main navmenu links when they are hovered over or active */
-  --nav-mobile-background-color: #ffffff; /* Used as the background color for mobile navigation menu */
-  --nav-dropdown-background-color: #ffffff; /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
-  --nav-dropdown-color: #212529; /* Used for navigation links of the dropdown items in the navigation menu. */
-  --nav-dropdown-hover-color: #f03c02; /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
-}
-
-/* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
-
-.light-background {
-  --background-color: #ececec;
-  --surface-color: #ffffff;
-}
-
-.dark-background {
-  --background-color: #060606;
-  --default-color: #ffffff;
-  --heading-color: #ffffff;
-  --surface-color: #252525;
-  --contrast-color: #ffffff;
-}
-
-/* Smooth scroll */
-:root {
-  scroll-behavior: smooth;
-}
 
 /*--------------------------------------------------------------
 # General Styling & Shared Classes
@@ -331,7 +286,7 @@ h6 {
     position: relative;
   }
 
-  .navmenu a,
+  /* .navmenu a,
   .navmenu a:focus {
     color: var(--nav-color);
     padding: 18px 12px;
@@ -344,7 +299,7 @@ h6 {
     justify-content: space-between;
     white-space: nowrap;
     transition: 0.3s;
-  }
+  } */
 
   .navmenu a i,
   .navmenu a:focus i {
@@ -362,62 +317,6 @@ h6 {
   .navmenu .active,
   .navmenu .active:focus {
     color: var(--nav-hover-color);
-  }
-
-  .navmenu .dropdown ul {
-    margin: 0;
-    padding: 10px 0;
-    background: var(--nav-dropdown-background-color);
-    display: block;
-    position: absolute;
-    visibility: hidden;
-    left: 14px;
-    top: 130%;
-    opacity: 0;
-    transition: 0.3s;
-    border-radius: 4px;
-    z-index: 99;
-    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
-  }
-
-  .navmenu .dropdown ul li {
-    min-width: 200px;
-  }
-
-  .navmenu .dropdown ul a {
-    padding: 10px 20px;
-    font-size: 15px;
-    text-transform: none;
-    color: var(--nav-dropdown-color);
-  }
-
-  .navmenu .dropdown ul a i {
-    font-size: 12px;
-  }
-
-  .navmenu .dropdown ul a:hover,
-  .navmenu .dropdown ul .active:hover,
-  .navmenu .dropdown ul li:hover>a {
-    color: var(--nav-dropdown-hover-color);
-  }
-
-  .navmenu .dropdown:hover>ul {
-    opacity: 1;
-    top: 100%;
-    visibility: visible;
-  }
-
-  .navmenu .dropdown .dropdown ul {
-    top: 0;
-    left: -90%;
-    visibility: hidden;
-  }
-
-  .navmenu .dropdown .dropdown:hover>ul {
-    opacity: 1;
-    top: 0;
-    left: -100%;
-    visibility: visible;
   }
 }
 
@@ -871,7 +770,7 @@ section,
   padding: 0;
 }
 
-.hero .carousel {
+/* .hero .carousel {
   width: 100%;
   min-height: 70vh;
   padding: 0;
@@ -894,7 +793,7 @@ section,
   height: 100%;
   object-fit: cover;
   z-index: 1;
-}
+} */
 
 .hero .carousel-item {
   position: absolute;
@@ -915,7 +814,7 @@ section,
   z-index: 2;
 }
 
-.hero .container {
+/* .hero .container {
   position: relative;
   text-align: center;
   background: color-mix(in srgb, var(--background-color), transparent 40%);
@@ -924,7 +823,7 @@ section,
   margin-bottom: 50px;
   border-top: 4px solid var(--accent-color);
   z-index: 3;
-}
+} */
 
 @media (max-width: 1200px) {
   .hero .container {
@@ -945,6 +844,7 @@ section,
   }
 }
 
+/* 
 .hero .btn-get-started {
   font-weight: 500;
   font-size: 16px;
@@ -953,14 +853,14 @@ section,
   padding: 8px 32px;
   transition: 0.5s;
   margin: 10px;
-  border-radius: 4px;
+  border-radius: 10px;
   color: var(--contrast-color);
   border: 2px solid var(--accent-color);
 }
 
 .hero .btn-get-started:hover {
   background: var(--accent-color);
-}
+} */
 
 .hero .carousel-control-prev {
   justify-content: start;
@@ -1042,7 +942,7 @@ section,
 /*--------------------------------------------------------------
 # Call To Action Section
 --------------------------------------------------------------*/
-.call-to-action {
+/* .call-to-action {
   padding: 50px 0;
   position: relative;
   clip-path: inset(0);
@@ -1081,7 +981,7 @@ section,
 .call-to-action .cta-btn:hover {
   background: var(--accent-color);
   color: var(--contrast-color);
-}
+} */
 
 /*--------------------------------------------------------------
 # Services Section

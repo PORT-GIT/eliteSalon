@@ -30,6 +30,8 @@ urlpatterns = [
 
     path('services-list/', views.list_of_services, name='services-list'),
 
+    path('about-us/', views.about_us, name='about-us'),
+
     path('services-given/', views.ServicesGivenListView.as_view(), name='services-given'),
 
     path('appointments/', views.AppointmentsListView.as_view(), name='appointments'),
