@@ -43,7 +43,7 @@
             
             <li><a href="{% url 'about-us' %}">About Us</a></li>
 
-            <li><a href="{% url 'book-appointments' %}">
+            <li><a href="{% url 'booking-calendar' %}">
               <button class=" btn btn-lg btn-secondary">Book Now</button></a>
             </li>
           </ul>
@@ -70,7 +70,7 @@
             <div class="container">
               <h1>Discover Beauty at Our Elite Salon</h1>
               <p>Feel relaxed, revitalized and beautiful in our elite salon</p>
-              <a href="{% url 'book-appointments' %}" class="btn-get-started">Book an Appointment Now</a>
+              <a href="{% url 'booking-calendar' %}" class="btn-get-started">Book an Appointment Now</a>
             </div>
           </div>
                     
@@ -82,7 +82,7 @@
             <div class="container">
               <h1>Discover Beauty at Our Elite Salon</h1>
               <p>Feel relaxed, revitalized and beautiful in our elite salon</p>
-              <a href="{% url 'book-appointments' %}" class="btn-get-started">Book an Appointment Now</a>
+              <a href="{% url 'booking-calendar' %}" class="btn-get-started">Book an Appointment Now</a>
           </div>
         </div>
 
@@ -92,7 +92,7 @@
             <div class="container">
             <h1>Discover Beauty at Our Elite Salon</h1>
             <p>Feel relaxed, revitalized and beautiful in our elite salon</p>
-            <a href="{% url 'book-appointments' %}" class="btn-get-started">Book an Appointment Now</a>
+            <a href="{% url 'booking-calendar' %}" class="btn-get-started">Book an Appointment Now</a>
           </div> 
         </div>
 
@@ -335,7 +335,7 @@
           <div class="container">
             <h1>Schedule Your EliteChic Salon Session Today!</h1>
             <p>Book your appointment now and get ready to experience the ultimate in hair and beauty services.</p>
-            <a href="{% url 'book-appointments' %}" class="btn-get-started">Book an Appointment Now</a>
+            <a href="{% url 'booking-calendar' %}" class="btn-get-started">Book an Appointment Now</a>
           </div>
         </div>
 
@@ -366,11 +366,9 @@
           <div class="col-lg-2 col-md-3 footer-links">
             <h4>Useful Links</h4>
             <ul>
-              <li><a href="#">Home</a></li>
-              <li><a href="#">About us</a></li>
-              <li><a href="#">Services</a></li>
-              <li><a href="#">Terms of service</a></li>
-              <li><a href="#">Privacy policy</a></li>
+              <li><a href="{% url 'homepage' %}">Home</a></li>
+                <li><a href="{% url 'services-list' %}">Services</a></li>
+                <li><a href="{% url 'about-us' %}">About us</a></li>
             </ul>
           </div>
 
@@ -385,16 +383,6 @@
             </ul>
           </div>
 
-          <div class="col-lg-2 col-md-3 footer-links">
-            <h4>Hic solutasetp</h4>
-            <ul>
-              <li><a href="#">Molestiae accusamus iure</a></li>
-              <li><a href="#">Excepturi dignissimos</a></li>
-              <li><a href="#">Suscipit distinctio</a></li>
-              <li><a href="#">Dilecta</a></li>
-              <li><a href="#">Sit quas consectetur</a></li>
-            </ul>
-          </div>
 
           <div class="col-lg-2 col-md-3 footer-links">
             <h4>Nobis illum</h4>

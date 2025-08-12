@@ -1,0 +1,376 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="container-fluid booking-calendar">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center mb-4">Book Your Appointment</h1>
+            <p class="text-center text-muted">Select your preferred date, time, and services</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Service Selection -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Select Services</h4>
+                </div>
+                <div class="card-body">
+                    <form id="service-selection-form">
+                        {% for service in services %}
+                        <div class="form-check">
+                            <input class="form-check-input service-checkbox" type="checkbox" 
+                                   value="{{ service.id }}" id="service{{ service.id }}">
+                            <label class="form-check-label" for="service{{ service.id }}">
+                                {{ service.service_name }} - ${{ service.price }}
+                                <small class="text-muted d-block">{{ service.durationOfService }}</small>
+                            </label>
+                        </div>
+                        {% endfor %}
+                        <div class="mt-3">
+                            <strong>Total: $<span id="total-price">0</span></strong>
+                            <br>
+                            <small>Duration: <span id="total-duration">0</span> minutes</small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Date and Time Selection -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Select Date & Time</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-group mb-3">
+                        <label for="appointment-date">Date</label>
+                        <input type="date" class="form-control" id="appointment-date" 
+                               min="{{ today|date:'Y-m-d' }}">
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="employee-select">Stylist</label>
+                        <select class="form-control" id="employee-select">
+                            <option value="">Select a stylist</option>
+                            {% for employee in employees %}
+                            <option value="{{ employee.id }}">{{ employee.user_profile.first_name }} {{ employee.user_profile.last_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Available Times</label>
+                        <div id="available-slots" class="d-flex flex-wrap gap-2">
+                            <small class="text-muted">Please select a date and stylist first</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Summary -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Booking Summary</h4>
+                </div>
+                <div class="card-body">
+                    <div id="booking-summary">
+                        <p class="text-muted">Select services, date, and time to see summary</p>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-block" id="book-appointment-btn" disabled>
+                        Book Appointment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Confirmation Modal -->
+<div class="modal fade" id="bookingModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Your Appointment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="modal-summary-content">
+                    <!-- Summary content will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirm-booking">Confirm Booking</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS for styling -->
+<style>
+.booking-calendar {
+    padding: 2rem 0;
+}
+
+.service-checkbox {
+    margin-right: 0.5rem;
+}
+
+.available-time-slot {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.available-time-slot:hover {
+    background-color: #f8f9fa;
+    border-color: #007bff;
+}
+
+.available-time-slot.selected {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin-bottom: 1rem;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+</style>
+
+<!-- JavaScript for interactivity -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    let selectedServices = [];
+    let selectedDate = null;
+    let selectedTime = null;
+    let selectedEmployee = null;
+
+    // Service selection
+    $('.service-checkbox').change(function() {
+        selectedServices = [];
+        $('.service-checkbox:checked').each(function() {
+            selectedServices.push($(this).val());
+        });
+        updateServiceDetails();
+    });
+
+    // Date and employee selection
+    $('#appointment-date, #employee-select').change(function() {
+        selectedDate = $('#appointment-date').val();
+        selectedEmployee = $('#employee-select').val();
+        
+        if (selectedDate && selectedEmployee) {
+            loadAvailableSlots();
+        }
+    });
+
+    // Time slot selection
+    $(document).on('click', '.available-time-slot', function() {
+        $('.available-time-slot').removeClass('selected');
+        $(this).addClass('selected');
+        selectedTime = $(this).data('time');
+        updateBookingSummary();
+    });
+
+    // Update service details
+    function updateServiceDetails() {
+        if (selectedServices.length > 0) {
+            $.get('/salon/get-service-details/', {
+                services: selectedServices.join(',')
+            }, function(data) {
+                if (data.success) {
+                    $('#total-price').text(data.total_price);
+                    $('#total-duration').text(data.total_duration);
+                    updateBookingSummary();
+                }
+            });
+        } else {
+            $('#total-price').text('0');
+            $('#total-duration').text('0');
+        }
+    }
+
+    // Load available time slots
+    function loadAvailableSlots() {
+        $.get('/salon/get-available-slots/', {
+            date: selectedDate,
+            employee_id: selectedEmployee
+        }, function(data) {
+            if (data.success) {
+                let slotsHtml = '';
+                data.available_slots.forEach(function(slot) {
+                    slotsHtml += `<button type="button" class="btn btn-outline-primary available-time-slot" data-time="${slot}">${slot}</button>`;
+                });
+                $('#available-slots').html(slotsHtml || '<small class="text-muted">No available slots for this date</small>');
+            }
+        });
+    }
+
+    // Update booking summary
+    function updateBookingSummary() {
+        if (selectedServices.length > 0 && selectedDate && selectedTime && selectedEmployee) {
+            let summary = `
+                <h6>Selected Services:</h6>
+                <ul>
+                    ${selectedServices.map(id => {
+                        let service = $('#service' + id).next('label').html();
+                        return `<li>${service}</li>`;
+                    }).join('')}
+                </ul>
+                <p><strong>Date:</strong> ${selectedDate}</p>
+                <p><strong>Time:</strong> ${selectedTime}</p>
+                <p><strong>Stylist:</strong> ${$('#employee-select option:selected').text()}</p>
+                <p><strong>Total Price:</strong> $${$('#total-price').text()}</p>
+                <p><strong>Duration:</strong> ${$('#total-duration').text()} minutes</p>
+            `;
+            $('#booking-summary').html(summary);
+            $('#book-appointment-btn').prop('disabled', false);
+        } else {
+            $('#booking-summary').html('<p class="text-muted">Select services, date, and time to see summary</p>');
+            $('#book-appointment-btn').prop('disabled', true);
+        }
+    }
+
+    // Book appointment
+    $('#book-appointment-btn').click(function() {
+        $('#modal-summary-content').html($('#booking-summary').html());
+        $('#bookingModal').modal('show');
+    });
+
+    // Confirm booking
+    $('#confirm-booking').click(function() {
+        $.ajax({
+            url: '/salon/book-appointment/',
+            type: 'POST',
+            data: {
+                services: selectedServices,
+                scheduleDay: selectedDate,
+                appointmentTime: selectedTime,
+                employeeId: selectedEmployee,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if (response.success) {
+                    alert('Appointment booked successfully!');
+                    location.reload();
+                } else {
+                    alert('Error: ' + response.message);
+                }
+            }
+        });
+    });
+});
+</script>
+
+<footer id="footer" class="footer dark-background">
+
+    <div class="footer-top">
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-lg-4 col-md-6 footer-about">
+            <a href="index.html" class="logo d-flex align-items-center">
+              <span class="sitename">Flattern</span>
+            </a>
+            <div class="footer-contact pt-3">
+              <p>A108 Adam Street</p>
+              <p>New York, NY 535022</p>
+              <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
+              <p><strong>Email:</strong> <span>info@example.com</span></p>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>Useful Links</h4>
+            <ul>
+              <li><a href="#">Home</a></li>
+              <li><a href="#">About us</a></li>
+              <li><a href="#">Services</a></li>
+              <li><a href="#">Terms of service</a></li>
+              <li><a href="#">Privacy policy</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>Our Services</h4>
+            <ul>
+              <li><a href="#">Web Design</a></li>
+              <li><a href="#">Web Development</a></li>
+              <li><a href="#">Product Management</a></li>
+              <li><a href="#">Marketing</a></li>
+              <li><a href="#">Graphic Design</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>Hic solutasetp</h4>
+            <ul>
+              <li><a href="#">Molestiae accusamus iure</a></li>
+              <li><a href="#">Excepturi dignissimos</a></li>
+              <li><a href="#">Suscipit distinctio</a></li>
+              <li><a href="#">Dilecta</a></li>
+              <li><a href="#">Sit quas consectetur</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>Nobis illum</h4>
+            <ul>
+              <li><a href="#">Ipsam</a></li>
+              <li><a href="#">Laudantium dolorum</a></li>
+              <li><a href="#">Dinera</a></li>
+              <li><a href="#">Trodelas</a></li>
+              <li><a href="#">Flexo</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="copyright text-center">
+      <div class="container d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
+
+        <div class="d-flex flex-column align-items-center align-items-lg-start">
+          <div>
+            © Copyright <strong><span>MyWebsite</span></strong>. All Rights Reserved
+          </div>
+          <div class="credits">
+            <!-- All the links in the footer should remain intact. -->
+            <!-- You can delete the links only if you purchased the pro version. -->
+            <!-- Licensing information: https://bootstrapmade.com/license/ -->
+            <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/herobiz-bootstrap-business-template/ -->
+            Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+          </div>
+        </div>
+
+        <div class="social-links order-first order-lg-last mb-3 mb-lg-0">
+          <a href=""><i class="bi bi-twitter-x"></i></a>
+          <a href=""><i class="bi bi-facebook"></i></a>
+          <a href=""><i class="bi bi-instagram"></i></a>
+          <a href=""><i class="bi bi-linkedin"></i></a>
+        </div>
+
+      </div>
+    </div>
+
+  </footer>
+{% endblock %}

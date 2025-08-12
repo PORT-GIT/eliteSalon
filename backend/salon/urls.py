@@ -1,30 +1,10 @@
 from django.urls import path
 from . import views
-from .appointment_form_wizard import SelectServicesForm, SelectDateForm, ConfirmDetailsForm, EmployeeSelectionForm
-from .views import AppointmentWizard
-
-
-FORMS = [
-    ("select_services", SelectServicesForm),
-    ("select_date", SelectDateForm),
-    ("select_employee", EmployeeSelectionForm),
-    ("confirm", ConfirmDetailsForm),
-]
-
-TEMPLATES = [
-    ("select_services", "salon/select_services.html"),
-    ("select_date", "salon/select_date.html"),
-    ("select_employee", "salon/select_employee.html"),
-    ("confirm" , "salon/confirm_details.html"),
-]
-
 
 urlpatterns = [
     path('create-services/', views.create_services, name='create-service'),
 
-    # path('create-appointments/', AppointmentWizard.as_view(), name='create-appointments'),
-
-    path('book-appointments/', views.book_appointments, name='book-appointments'),
+    # path('book-appointments/', views.book_appointments, name='book-appointments'),
 
     path('create-services-given/', views.create_services_given, name='create-services-given'),
 
@@ -41,5 +21,11 @@ urlpatterns = [
     path('appointments/<int:pk>/delete', views.AppointmentDeleteView.as_view(), name='delete-appointment'),
 
     # path('services/', views.ServicesListView.as_view(), name='services'),
+
+    # New booking calendar URLs
+    path('booking-calendar/', views.booking_calendar, name='booking-calendar'),
+    path('book-appointment/', views.book_appointment_ajax, name='book-appointment-ajax'),
+    path('get-available-slots/', views.get_available_slots, name='get-available-slots'),
+    path('get-service-details/', views.get_service_details, name='get-service-details'),
 
 ]

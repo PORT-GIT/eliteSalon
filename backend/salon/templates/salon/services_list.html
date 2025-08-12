@@ -71,8 +71,32 @@
         </div>
       </div><!-- End Page Title -->
 
+      <section class="home-end">
+
+      <div class="end">
+        <!-- data-aos="fade-up" data-aos-delay="100" -->
+
+        <div class="end-item active">
+          <img src="{% static 'assets/img/applying-makeup.jpg' %}" alt="img-fluid">
+          <div class="container">
+            <h1>Welcome to EliteChic!</h1>
+            <p>Go through what we have to offer and let us know how we can help you.</p>
+            <a href="{% url 'book-appointments' %}" class="btn-get-started">Book an Appointment Now</a>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
       <!-- Services Section -->
       <section id="services" class="services section">
+
+        <!-- Section Title -->
+        <div class="container section-title" data-aos="fade-up">
+          <h2>Services</h2>
+          <p>Look at what we have to offer</p>
+        </div><!-- End Section Title -->
 
         <div class="container">
 
@@ -81,10 +105,10 @@
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
               <div class="service-item  position-relative">
                 <div class="icon">
-                  <i class="bi bi-activity"></i>
+                  <i class="bi bi-1-circle-fill"></i>
                 </div>
                 <a href="#" class="stretched-link">
-                  <h3>Nesciunt Mete</h3>
+                  <h3>Braiding</h3>
                 </a>
                 <p>Provident nihil minus qui consequatur non omnis maiores. Eos accusantium minus dolores iure perferendis tempore et consequatur.</p>
               </div>
@@ -93,10 +117,10 @@
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
               <div class="service-item position-relative">
                 <div class="icon">
-                  <i class="bi bi-broadcast"></i>
+                  <i class="bi bi-2-circle-fill"></i>
                 </div>
                 <a href="#" class="stretched-link">
-                  <h3>Eosle Commodi</h3>
+                  <h3>Haircuts</h3>
                 </a>
                 <p>Ut autem aut autem non a. Sint sint sit facilis nam iusto sint. Libero corrupti neque eum hic non ut nesciunt dolorem.</p>
               </div>
@@ -105,10 +129,10 @@
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
               <div class="service-item position-relative">
                 <div class="icon">
-                  <i class="bi bi-easel"></i>
+                  <i class="bi bi-3-circle-fill"></i>
                 </div>
                 <a href="#" class="stretched-link">
-                  <h3>Ledo Markt</h3>
+                  <h3>Facials</h3>
                 </a>
                 <p>Ut excepturi voluptatem nisi sed. Quidem fuga consequatur. Minus ea aut. Vel qui id voluptas adipisci eos earum corrupti.</p>
               </div>
@@ -117,10 +141,10 @@
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
               <div class="service-item position-relative">
                 <div class="icon">
-                  <i class="bi bi-bounding-box-circles"></i>
+                  <i class="bi bi-4-circle-fill"></i>
                 </div>
                 <a href="#" class="stretched-link">
-                  <h3>Asperiores Commodit</h3>
+                  <h3>Nail and Foot Care</h3>
                 </a>
                 <p>Non et temporibus minus omnis sed dolor esse consequatur. Cupiditate sed error ea fuga sit provident adipisci neque.</p>
                 <a href="#" class="stretched-link"></a>
@@ -130,10 +154,10 @@
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
               <div class="service-item position-relative">
                 <div class="icon">
-                  <i class="bi bi-calendar4-week"></i>
+                  <i class="bi bi-5-circle-fill"></i>
                 </div>
                 <a href="#" class="stretched-link">
-                  <h3>Velit Doloremque</h3>
+                  <h3>Make-up</h3>
                 </a>
                 <p>Cumque et suscipit saepe. Est maiores autem enim facilis ut aut ipsam corporis aut. Sed animi at autem alias eius labore.</p>
                 <a href="#" class="stretched-link"></a>
@@ -143,10 +167,10 @@
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
               <div class="service-item position-relative">
                 <div class="icon">
-                  <i class="bi bi-chat-square-text"></i>
+                  <i class="bi bi-6-circle-fill"></i>
                 </div>
                 <a href="#" class="stretched-link">
-                  <h3>Dolori Architecto</h3>
+                  <h3>Natural Hair Styling</h3>
                 </a>
                 <p>Hic molestias ea quibusdam eos. Fugiat enim doloremque aut neque non et debitis iure. Corrupti recusandae ducimus enim.</p>
                 <a href="#" class="stretched-link"></a>
@@ -164,8 +188,8 @@
 
         <!-- Section Title -->
         <div class="container section-title" data-aos="fade-up">
-          <h2>Features</h2>
-          <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+          <h2>How to book an appointment with us</h2>
+          <p>Walk-Ins are allowed but the client may be served later than expected because of existing bookings</p>
         </div><!-- End Section Title -->
 
         <div class="container">
@@ -262,38 +286,27 @@
             <div class="col-lg-2 col-md-3 footer-links">
               <h4>Useful Links</h4>
               <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About us</a></li>
-                <li><a href="#">Services</a></li>
-                <li><a href="#">Terms of service</a></li>
-                <li><a href="#">Privacy policy</a></li>
+                <li><a href="{% url 'homepage' %}">Home</a></li>
+                <li><a href="{% url 'services-list' %}">Services</a></li>
+                <li><a href="{% url 'about-us' %}">About us</a></li>
               </ul>
             </div>
 
             <div class="col-lg-2 col-md-3 footer-links">
               <h4>Our Services</h4>
               <ul>
-                <li><a href="#">Web Design</a></li>
-                <li><a href="#">Web Development</a></li>
-                <li><a href="#">Product Management</a></li>
-                <li><a href="#">Marketing</a></li>
-                <li><a href="#">Graphic Design</a></li>
+                <li>Braiding</li>
+                <li>Haircuts</li>
+                <li>Facials</li>
+                <li>Nail and Foot Care</li>
+                <li>Make-up</li>
+                <li>Natural Hair Styling</li>
               </ul>
             </div>
 
-            <div class="col-lg-2 col-md-3 footer-links">
-              <h4>Hic solutasetp</h4>
-              <ul>
-                <li><a href="#">Molestiae accusamus iure</a></li>
-                <li><a href="#">Excepturi dignissimos</a></li>
-                <li><a href="#">Suscipit distinctio</a></li>
-                <li><a href="#">Dilecta</a></li>
-                <li><a href="#">Sit quas consectetur</a></li>
-              </ul>
-            </div>
 
-            <div class="col-lg-2 col-md-3 footer-links">
-              <h4>Nobis illum</h4>
+            <div class="col-lg-3 col-md-3 footer-links">
+              <h4>Subscribe to Our Newsletter</h4>
               <ul>
                 <li><a href="#">Ipsam</a></li>
                 <li><a href="#">Laudantium dolorum</a></li>
