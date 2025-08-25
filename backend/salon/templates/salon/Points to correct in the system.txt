@@ -7,3 +7,6 @@ Points to correct in the system
 5. ensure that the employee is not assigned to another appointment once they are assigned to an appointment
 6. what happens when there are no employees to choose , is the client given a  time slot when some employee will be free or 
 7. the buttons in the confirmation modal are not working
+8. consider adding the customer name to the view to show that is them like welcome Annie, 
+
+I NEED TO TRANSFER THE CODE FOR THE EMPLOYEE REGISTRATION AND THE BOOKING TO THE RIGHT TEMPLATES NOT THE SYSTEM MADE TEMPLATES
