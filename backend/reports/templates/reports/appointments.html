@@ -46,19 +46,7 @@
                             <th>Updated At</th>
                           </tr>
                         </thead>
-                        <tfoot>
-                          <tr>
-                            <th>Appointment ID</th>
-                            <th>Customer Name</th>
-                            <th>Services Selected</th>
-                            <th>Employee Name</th>
-                            <th>Scheduled Day</th>
-                            <th>Start of Appointment</th>
-                            <th>End of Appointment</th>
-                            <th>Updated At</th>
-
-                          </tr>
-                        </tfoot>
+                        
                         <tbody>
                           {% for appointment in appointments %}
                           <tr>
@@ -79,12 +67,26 @@
                             <td>{{ appointment.updatedAt }}</td>
                           </tr>
                           {% empty %}
-                            <tr>
-                                <td colspan="6">No appointments found.</td>
-                            </tr>    
+                          <tr>
+                            <td colspan="6">No appointments found.</td>
+                          </tr>    
 
                           {% endfor %}
                         </tbody>
+
+                        <tfoot>
+                          <tr>
+                            <th>Appointment ID</th>
+                            <th>Customer Name</th>
+                            <th>Services Selected</th>
+                            <th>Employee Name</th>
+                            <th>Scheduled Day</th>
+                            <th>Start of Appointment</th>
+                            <th>End of Appointment</th>
+                            <th>Updated At</th>
+
+                          </tr>
+                        </tfoot>
                       </table>
                     </div>
                   </div>
@@ -94,105 +96,8 @@
               <div class="col-md-12">
                 <div class="card">
                   <div class="card-header">
-                    <div class="d-flex align-items-center">
-                      <h4 class="card-title">Add Row</h4>
-                      <button
-                        class="btn btn-primary btn-round ms-auto"
-                        data-bs-toggle="modal"
-                        data-bs-target="#addRowModal"
-                      >
-                        <i class="fa fa-plus"></i>
-                        Add Row
-                      </button>
-                    </div>
+                    <h4 class="card-title">Appointment Details</h4>
                   </div>
-                  <div class="card-body">
-                    <!-- Modal -->
-                    <div
-                      class="modal fade"
-                      id="addRowModal"
-                      tabindex="-1"
-                      role="dialog"
-                      aria-hidden="true"
-                    >
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header border-0">
-                            <h5 class="modal-title">
-                              <span class="fw-mediumbold"> New</span>
-                              <span class="fw-light"> Row </span>
-                            </h5>
-                            <button
-                              type="button"
-                              class="close"
-                              data-dismiss="modal"
-                              aria-label="Close"
-                            >
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <p class="small">
-                              Create a new row using this form, make sure you
-                              fill them all
-                            </p>
-                            <form>
-                              <div class="row">
-                                <div class="col-sm-12">
-                                  <div class="form-group form-group-default">
-                                    <label>Name</label>
-                                    <input
-                                      id="addName"
-                                      type="text"
-                                      class="form-control"
-                                      placeholder="fill name"
-                                    />
-                                  </div>
-                                </div>
-                                <div class="col-md-6 pe-0">
-                                  <div class="form-group form-group-default">
-                                    <label>Position</label>
-                                    <input
-                                      id="addPosition"
-                                      type="text"
-                                      class="form-control"
-                                      placeholder="fill position"
-                                    />
-                                  </div>
-                                </div>
-                                <div class="col-md-6">
-                                  <div class="form-group form-group-default">
-                                    <label>Office</label>
-                                    <input
-                                      id="addOffice"
-                                      type="text"
-                                      class="form-control"
-                                      placeholder="fill office"
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            </form>
-                          </div>
-                          <div class="modal-footer border-0">
-                            <button
-                              type="button"
-                              id="addRowButton"
-                              class="btn btn-primary"
-                            >
-                              Add
-                            </button>
-                            <button
-                              type="button"
-                              class="btn btn-danger"
-                              data-dismiss="modal"
-                            >
-                              Close
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
 
                     <div class="table-responsive">
                       <table
@@ -201,34 +106,52 @@
                       >
                         <thead>
                           <tr>
-                            <th>Name</th>
-                            <th>Position</th>
-                            <th>Office</th>
-                            <th style="width: 10%">Action</th>
+                            <th>Appointment ID</th>
+                            <th>Customer Name</th>
+                            <th>Services Selected</th>
+                            <th>Updated At</th>
+                            <th>Action</th>
                           </tr>
                         </thead>
                         <tfoot>
                           <tr>
-                            <th>Name</th>
-                            <th>Position</th>
-                            <th>Office</th>
+                            <th>Appointment ID</th>
+                            <th>Customer Name</th>
+                            <th>Services Selected</th>
+                            <th>Updated At</th>
                             <th>Action</th>
                           </tr>
                         </tfoot>
                         <tbody>
+
+                          {% for appointment in appointments %}
                           <tr>
-                            <td>Tiger Nixon</td>
-                            <td>System Architect</td>
-                            <td>Edinburgh</td>
+                            <td>{{ appointment.id}} </td>
+                            <td>{{ appointment.customerId.user_profile.get_full_name }}</td>
+                            
+                            <td>
+                              {% for service in appointment.services.all %}
+                                {{ service.service_name}}{% if not forloop.last %}, {% endif %}
+                              {% endfor %}
+                              <!-- this will lopp through the services offered by an employee -->
+                            </td>
+
+                            <td>{{ appointment.updatedAt }}</td>
+                            
                             <td>
                               <div class="form-button-action">
                                 <button
-                                  type="button"
-                                  data-bs-toggle="tooltip"
-                                  title=""
-                                  class="btn btn-link btn-primary btn-lg"
+                                  type="button" class="btn btn-link btn-primary btn-lg"
                                   data-original-title="Edit Task"
-                                >
+                                  data-bs-toggle="modal" data-bs-target="#appointmentModal"
+                                  data-id="{{ appointment.id }}" data-customer="{{ appointment.customerId.user_profile.get_full_name }}"
+                                  data-employee="{{ appointment.employeeId.user_profile.get_full_name }}" data-day="{{ appointment.scheduleDay }}"
+                                  data-start="{{ appointment.appointmentTime }}" data-end="{{ appointment.appointmentEndTime }}"
+                                  data-status="{{ appointment.appointmentStatus }}" data-updated="{{ appointment.updatedAt }}"
+                                  data-services="{% for service in appointment.services.all %}
+                                  {{ service.service_name}}{% if not forloop.last %}, {% endif %}
+                                  {% endfor %}"
+                                  >
                                   <i class="fa fa-edit"></i>
                                 </button>
                                 <button
@@ -243,249 +166,14 @@
                               </div>
                             </td>
                           </tr>
+                          {% empty %}
                           <tr>
-                            <td>Garrett Winters</td>
-                            <td>Accountant</td>
-                            <td>Tokyo</td>
-                            <td>
-                              <div class="form-button-action">
-                                <button
-                                  type="button"
-                                  data-bs-toggle="tooltip"
-                                  title=""
-                                  class="btn btn-link btn-primary btn-lg"
-                                  data-original-title="Edit Task"
-                                >
-                                  <i class="fa fa-edit"></i>
-                                </button>
-                                <button
-                                  type="button"
-                                  data-bs-toggle="tooltip"
-                                  title=""
-                                  class="btn btn-link btn-danger"
-                                  data-original-title="Remove"
-                                >
-                                  <i class="fa fa-times"></i>
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Ashton Cox</td>
-                            <td>Junior Technical Author</td>
-                            <td>San Francisco</td>
-                            <td>
-                              <div class="form-button-action">
-                                <button
-                                  type="button"
-                                  data-bs-toggle="tooltip"
-                                  title=""
-                                  class="btn btn-link btn-primary btn-lg"
-                                  data-original-title="Edit Task"
-                                >
-                                  <i class="fa fa-edit"></i>
-                                </button>
-                                <button
-                                  type="button"
-                                  data-bs-toggle="tooltip"
-                                  title=""
-                                  class="btn btn-link btn-danger"
-                                  data-original-title="Remove"
-                                >
-                                  <i class="fa fa-times"></i>
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Cedric Kelly</td>
-                            <td>Senior Javascript Developer</td>
-                            <td>Edinburgh</td>
-                            <td>
-                              <div class="form-button-action">
-                                <button
-                                  type="button"
-                                  data-bs-toggle="tooltip"
-                                  title=""
-                                  class="btn btn-link btn-primary btn-lg"
-                                  data-original-title="Edit Task"
-                                >
-                                  <i class="fa fa-edit"></i>
-                                </button>
-                                <button
-                                  type="button"
-                                  data-bs-toggle="tooltip"
-                                  title=""
-                                  class="btn btn-link btn-danger"
-                                  data-original-title="Remove"
-                                >
-                                  <i class="fa fa-times"></i>
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Airi Satou</td>
-                            <td>Accountant</td>
-                            <td>Tokyo</td>
-                            <td>
-                              <div class="form-button-action">
-                                <button
-                                  type="button"
-                                  data-bs-toggle="tooltip"
-                                  title=""
-                                  class="btn btn-link btn-primary btn-lg"
-                                  data-original-title="Edit Task"
-                                >
-                                  <i class="fa fa-edit"></i>
-                                </button>
-                                <button
-                                  type="button"
-                                  data-bs-toggle="tooltip"
-                                  title=""
-                                  class="btn btn-link btn-danger"
-                                  data-original-title="Remove"
-                                >
-                                  <i class="fa fa-times"></i>
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Brielle Williamson</td>
-                            <td>Integration Specialist</td>
-                            <td>New York</td>
-                            <td>
-                              <div class="form-button-action">
-                                <button
-                                  type="button"
-                                  data-bs-toggle="tooltip"
-                                  title=""
-                                  class="btn btn-link btn-primary btn-lg"
-                                  data-original-title="Edit Task"
-                                >
-                                  <i class="fa fa-edit"></i>
-                                </button>
-                                <button
-                                  type="button"
-                                  data-bs-toggle="tooltip"
-                                  title=""
-                                  class="btn btn-link btn-danger"
-                                  data-original-title="Remove"
-                                >
-                                  <i class="fa fa-times"></i>
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Herrod Chandler</td>
-                            <td>Sales Assistant</td>
-                            <td>San Francisco</td>
-                            <td>
-                              <div class="form-button-action">
-                                <button
-                                  type="button"
-                                  data-bs-toggle="tooltip"
-                                  title=""
-                                  class="btn btn-link btn-primary btn-lg"
-                                  data-original-title="Edit Task"
-                                >
-                                  <i class="fa fa-edit"></i>
-                                </button>
-                                <button
-                                  type="button"
-                                  data-bs-toggle="tooltip"
-                                  title=""
-                                  class="btn btn-link btn-danger"
-                                  data-original-title="Remove"
-                                >
-                                  <i class="fa fa-times"></i>
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Rhona Davidson</td>
-                            <td>Integration Specialist</td>
-                            <td>Tokyo</td>
-                            <td>
-                              <div class="form-button-action">
-                                <button
-                                  type="button"
-                                  data-bs-toggle="tooltip"
-                                  title=""
-                                  class="btn btn-link btn-primary btn-lg"
-                                  data-original-title="Edit Task"
-                                >
-                                  <i class="fa fa-edit"></i>
-                                </button>
-                                <button
-                                  type="button"
-                                  data-bs-toggle="tooltip"
-                                  title=""
-                                  class="btn btn-link btn-danger"
-                                  data-original-title="Remove"
-                                >
-                                  <i class="fa fa-times"></i>
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Colleen Hurst</td>
-                            <td>Javascript Developer</td>
-                            <td>San Francisco</td>
-                            <td>
-                              <div class="form-button-action">
-                                <button
-                                  type="button"
-                                  data-bs-toggle="tooltip"
-                                  title=""
-                                  class="btn btn-link btn-primary btn-lg"
-                                  data-original-title="Edit Task"
-                                >
-                                  <i class="fa fa-edit"></i>
-                                </button>
-                                <button
-                                  type="button"
-                                  data-bs-toggle="tooltip"
-                                  title=""
-                                  class="btn btn-link btn-danger"
-                                  data-original-title="Remove"
-                                >
-                                  <i class="fa fa-times"></i>
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Sonya Frost</td>
-                            <td>Software Engineer</td>
-                            <td>Edinburgh</td>
-                            <td>
-                              <div class="form-button-action">
-                                <button
-                                  type="button"
-                                  data-bs-toggle="tooltip"
-                                  title=""
-                                  class="btn btn-link btn-primary btn-lg"
-                                  data-original-title="Edit Task"
-                                >
-                                  <i class="fa fa-edit"></i>
-                                </button>
-                                <button
-                                  type="button"
-                                  data-bs-toggle="tooltip"
-                                  title=""
-                                  class="btn btn-link btn-danger"
-                                  data-original-title="Remove"
-                                >
-                                  <i class="fa fa-times"></i>
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
+                            <td colspan="6">No appointments found.</td>
+                          </tr>    
+
+                          {% endfor %}
+
+                          
                         </tbody>
                       </table>
                     </div>
@@ -494,7 +182,74 @@
               </div>
             </div>
           </div>
+          <!-- Appointment Detail Modal -->
+            <div class="modal fade" id="appointmentModal" tabindex="-1" role="dialog" aria-labelledby="appointmentModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="appointmentModalLabel">Appointment Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <p><strong>Appointment ID:</strong> <span id="modal-id"></span></p>
+                        <p><strong>Customer:</strong> <span id="modal-customer"></span></p>
+                        <p><strong>Employee:</strong> <span id="modal-employee"></span></p>
+                        <p><strong>Scheduled Day:</strong> <span id="modal-day"></span></p>
+                      </div>
+                      <div class="col-md-6">
+                        <p><strong>Start Time:</strong> <span id="modal-start"></span></p>
+                        <p><strong>End Time:</strong> <span id="modal-end"></span></p>
+                        <p><strong>Status:</strong> <span id="modal-status"></span></p>
+                        <p><strong>Updated At:</strong> <span id="modal-updated"></span></p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <p><strong>Services:</strong></p>
+                        <p id="modal-services"></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
         </div>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var appointmentModal = document.getElementById('appointmentModal');
+      appointmentModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget; // this button will trigger the modal
+        var id = button.getAttribute('data-id');
+        var customer = button.getAttribute('data-customer');
+        var employee = button.getAttribute('data-employee');
+        var day = button.getAttribute('data-day');
+        var start = button.getAttribute('data-start');
+        var end = button.getAttribute('data-end');
+        var status = button.getAttribute('data-status');
+        var updated = button.getAttribute('data-updated');
+        var services = button.getAttribute('data-services');
+
+        
+        document.getElementById('modal-id').textContent = id;
+        document.getElementById('modal-customer').textContent = customer;
+        document.getElementById('modal-employee').textContent = employee;
+        document.getElementById('modal-day').textContent = day;
+        document.getElementById('modal-start').textContent = start;
+        document.getElementById('modal-end').textContent = end;
+        document.getElementById('modal-status').textContent = status;
+        document.getElementById('modal-updated').textContent = updated;
+        document.getElementById('modal-services').textContent = services;
+      });
+      
+    });
+    
+  </script>
 
 {% endblock %}

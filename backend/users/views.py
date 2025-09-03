@@ -1,25 +1,36 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import EmployeeRegistrationForm, CustomerRegistrationForm
-from .decorator import employee_required, customer_required, admin_required
+from .models import EmployeeProfile
+# from .decorator import employee_required, customer_required, admin_required
 
 # this is a view for the homepage 
 def homepage(request):
     return render(request, 'users/home.html')
 
 
-@employee_required
+# @employee_required
 def employee_dashboard(request):
     return render(request, 'users/employee_dashboard.html')
 
-@customer_required
+# @customer_required
 def customer_dashboard(request):
     return render(request, 'users/customer_dashboard.html')
 
-@admin_required
+# @admin_required
 def admin_dashboard(request):
     return render(request, 'reports/dashboard.html')
+
+# @admin_required
+def delete_employee(request, pk):
+    employee = get_object_or_404(EmployeeProfile, pk=pk)
+    if request.method == 'POST':
+        employee.user_profile.delete()
+        return redirect('employee_list') 
+        #this will redirect to the employee list after deletion
+    return redirect('reports/dashboard.html')
 
 # @employee_required
 def register_employee(request):
