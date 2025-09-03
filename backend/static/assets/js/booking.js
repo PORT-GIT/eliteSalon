@@ -177,10 +177,58 @@ $(document).ready(function() {
             $('#bookingModal').modal('show');
     });
 
+    // Function to validate booking data before sending
+    function validateBookingData() {
+        let errors = [];
+
+        if (selectedServices.length === 0) {
+            errors.push('Please select at least one service.');
+        }
+
+        if (!selectedDate) {
+            errors.push('Please select a date.');
+        } else {
+            const selectedDateObj = new Date(selectedDate);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            if (selectedDateObj < today) {
+                errors.push('Please select a date that is not in the past.');
+            }
+        }
+
+        if (!selectedTime) {
+            errors.push('Please select a time slot.');
+        }
+
+        if (!selectedEmployee) {
+            errors.push('Please select a stylist.');
+        }
+
+        if (errors.length > 0) {
+            alert('Please correct the following errors:\n' + errors.join('\n'));
+            return false;
+        }
+
+        return true;
+    }
+
     //this is to confirm the booking
-    $('#confirm-booking').click(function() {
+    $('#confirm-booking').click(function(e) {
+            e.preventDefault();
             showLoading(false);
             //will change false to true if i want the loading to be seen
+
+            // Validate data before sending
+            if (!validateBookingData()) {
+                return;
+            }
+
+            console.log('Sending data:', {
+                services: selectedServices,
+                scheduleDay: selectedDate,
+                appointmentTime: selectedTime,
+                employeeId: selectedEmployee
+            });
 
             $.ajax({
                 url: '/salon/book-appointment/',
@@ -199,7 +247,7 @@ $(document).ready(function() {
                         $('#bookingModal').modal('hide');
                         showSuccessMessage('Appointment booked successfully!');
                         //this will redirect to another page or clear the form after a successfull booking
-                        
+
                         setTimeout(function() {
                             window.location.href = response.redirect_url || '/';
                         }, 2000);
@@ -211,14 +259,21 @@ $(document).ready(function() {
                 error: function(xhr, status, error) {
 
                     let errorMessage = "Error booking appointment. Please try again.";
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-
-                        errorMessage = xhr.responseJSON.message;
+                    if (xhr.responseJSON) {
+                        if (xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+                        if (xhr.responseJSON.errors) {
+                            let errorDetails = '';
+                            for (let field in xhr.responseJSON.errors) {
+                                errorDetails += field + ': ' + xhr.responseJSON.errors[field].join(', ') + '\n';
+                            }
+                            errorMessage += '\n' + errorDetails;
+                        }
                     } else if (xhr.responseText) {
-
                         errorMessage = xhr.responseText;
                     }
-                    alert('errorMessage');
+                    alert(errorMessage);
                     console.error('Booking Error:', error, xhr.responseText);
                     // this code will inform me of any issue in the console and what is going wrong
                 },
@@ -226,7 +281,7 @@ $(document).ready(function() {
                     showLoading(false);
                 }
             });
-           
+
         });
 
     });

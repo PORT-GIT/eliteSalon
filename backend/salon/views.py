@@ -93,22 +93,21 @@ def booking_calendar(request):
 def book_appointment_ajax(request):
     """Handle appointment booking via AJAX"""
     if request.method == 'POST':
-        # Parse JSON data from request body
-        try:
-            data = json.loads(request.body)
-        except json.JSONDecodeError:
-            return JsonResponse({
-                'success': False,
-                'message': 'Invalid JSON data'
-            })
-        
+        # Parse form data from request
+        data = {
+            'services': request.POST.getlist('services'),
+            'scheduleDay': request.POST.get('scheduleDay'),
+            'appointmentTime': request.POST.get('appointmentTime'),
+            'employeeId': request.POST.get('employeeId')
+        }
+
         # Check if user has a customer profile
         if not hasattr(request.user, 'customer_profile'):
             return JsonResponse({
                 'success': False,
                 'message': 'User does not have a customer profile'
             })
-        
+
         # Create a QueryDict from the parsed data
         form_data = QueryDict(mutable=True)
         for key, value in data.items():
@@ -118,7 +117,7 @@ def book_appointment_ajax(request):
                     form_data.appendlist(key, service_id)
             else:
                 form_data[key] = value
-        
+
         form = AppointmentBookingForm(form_data, customer=request.user.customer_profile)
         
         if form.is_valid():
@@ -169,12 +168,13 @@ def book_appointment_ajax(request):
                     'success': False,
                     'message': f'Error saving appointment: {str(e)}'
                 })
-        else:
-            return JsonResponse({
-                'success': False,
-                'message': 'Please correct the errors below',
-                'errors': form.errors
-            })
+    else:
+        print("Form errors:", form.errors)
+        return JsonResponse({
+            'success': False,
+            'message': 'Please correct the errors below',
+            'errors': form.errors
+        })
     
     return JsonResponse({'success': False, 'message': 'Invalid request'})
 

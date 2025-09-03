@@ -14,24 +14,27 @@ class AppointmentBookingForm(forms.ModelForm):
         queryset=service.objects.all(),
         widget=forms.CheckboxSelectMultiple,
         required=True,
+        label="Select Services",
         help_text="Select the services you want"
     )
-    
+
     scheduleDay = forms.DateField(
         widget=forms.DateInput(attrs={
             'type': 'date',
             'class': 'form-control',
             'min': date.today().strftime('%Y-%m-%d')
         }),
-        required=True
+        required=True,
+        label="Appointment Date"
     )
-    
+
     appointmentTime = forms.TimeField(
         widget=forms.TimeInput(attrs={
             'type': 'time',
             'class': 'form-control'
         }),
-        required=True
+        required=True,
+        label="Appointment Time"
     )
     
     class Meta:
@@ -44,7 +47,7 @@ class AppointmentBookingForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.customer = kwargs.pop('customer', None)
         super().__init__(*args, **kwargs)
-        self.fields['employeeId'].queryset = EmployeeProfile.objects.filter(work_status='FREE')
+        self.fields['employeeId'].queryset = EmployeeProfile.objects.all()
         self.fields['employeeId'].label = "Select Stylist"
         
     def clean(self):

@@ -22,7 +22,9 @@ urlpatterns = [
 
     path('employees/', views.employee_report, name='employee_report'),
     
-    path('customers/', views.customers_report, name='customers_report')
+    path('customers/', views.customers_report, name='customers_report'),
+
+    path('valuable-reports/', views.valuable_reports, name='valuable_reports'),
 
 ]
 
