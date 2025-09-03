@@ -197,12 +197,12 @@ body[data-background-color="dark"] .demo-icon .icon-class {
   background-color: #48ABF7; }
 .btnSwitch button[data-color="green"] {
   background-color: #31CE36; }
-.btnSwitch button[data-color="orange"] {
-  background-color: #FFAD46; }
-.btnSwitch button[data-color="red"] {
-  background-color: #F25961; }
+.btnSwitch button[data-color="red-orange"] {
+  background-color: #f03c02; }
+.btnSwitch button[data-color="dark-lava"] {
+  background-color: #4d4643; }
 .btnSwitch button[data-color="dark2"] {
-  background-color: #1f283e; }
+  background-color: #2b2320; }
 .btnSwitch button[data-color="blue2"] {
   background-color: #1269DB; }
 .btnSwitch button[data-color="purple2"] {
@@ -213,8 +213,8 @@ body[data-background-color="dark"] .demo-icon .icon-class {
   background-color: #2BB930; }
 .btnSwitch button[data-color="orange2"] {
   background-color: #FF9E27; }
-.btnSwitch button[data-color="red2"] {
-  background-color: #EA4d56; }
+.btnSwitch button[data-color="dark-brown"] {
+  background-color: #212529; }
 .btnSwitch button[data-color="bg1"] {
   background-color: #fafafa; }
 .btnSwitch button[data-color="bg2"] {

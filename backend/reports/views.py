@@ -6,21 +6,38 @@ from users.models import CustomerProfile, EmployeeProfile
 # this are for the reports UI
 import json
 
-
 def dashboard(request):
     return render(request, 'reports/dashboard.html')
 
-def appointment_report(request):
-    appointments = salonAppointment.objects.all()
-    
-    # Add simple filters
+def customer_list(request):
+    customers = CustomerProfile.objects.all().select_related('user_profile')
+    return render(request, 'reports/customers.html', {'customers': customers})
+
+def employee_list(request):
+    employees = EmployeeProfile.objects.all().select_related('user_profile')
+    return render(request, 'reports/employees.html', {'employees': employees})
+
+def appointment_list(request):
+    appointments = salonAppointment.objects.all().select_related('customerId__user_profile', 'employeeId__user_profile')
+
+    # this add filters
     status = request.GET.get('status')
     if status:
         appointments = appointments.filter(appointmentStatus=status)
+        
+    return render(request, 'reports/appointments.html', {'appointments': appointments})
+
+# def appointment_report(request):
+#     appointments = salonAppointment.objects.all()
     
-    return render(request, 'reports/appointment_reports.html', {
-        'appointments': appointments
-    })
+#     # Add simple filters
+#     status = request.GET.get('status')
+#     if status:
+#         appointments = appointments.filter(appointmentStatus=status)
+    
+#     return render(request, 'reports/appointment_reports.html', {
+#         'appointments': appointments
+#     })
 
 def services_report(request):
     services_data = service.objects.annotate(

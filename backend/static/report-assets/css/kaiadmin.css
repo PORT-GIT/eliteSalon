@@ -759,15 +759,15 @@ body {
     .sidebar .nav.nav-warning > .nav-item .nav-collapse li.active > a, .sidebar[data-background-color="white"] .nav.nav-warning > .nav-item .nav-collapse li.active > a {
       color: #FFAD46 !important; }
     .sidebar .nav.nav-danger > .nav-item a:hover i, .sidebar .nav.nav-danger > .nav-item a:focus i, .sidebar .nav.nav-danger > .nav-item a[data-toggle=collapse][aria-expanded=true] i, .sidebar[data-background-color="white"] .nav.nav-danger > .nav-item a:hover i, .sidebar[data-background-color="white"] .nav.nav-danger > .nav-item a:focus i, .sidebar[data-background-color="white"] .nav.nav-danger > .nav-item a[data-toggle=collapse][aria-expanded=true] i {
-      color: #F25961 !important; }
+      color: #f03c02 !important; }
     .sidebar .nav.nav-danger > .nav-item a[data-toggle=collapse][aria-expanded=true]:before, .sidebar[data-background-color="white"] .nav.nav-danger > .nav-item a[data-toggle=collapse][aria-expanded=true]:before {
-      background: #F25961 !important; }
+      background: #f03c02 !important; }
     .sidebar .nav.nav-danger > .nav-item.active a:before, .sidebar[data-background-color="white"] .nav.nav-danger > .nav-item.active a:before {
-      background: #F25961 !important; }
+      background: #f03c02 !important; }
     .sidebar .nav.nav-danger > .nav-item.active a i, .sidebar[data-background-color="white"] .nav.nav-danger > .nav-item.active a i {
-      color: #F25961 !important; }
+      color: #f03c02 !important; }
     .sidebar .nav.nav-danger > .nav-item .nav-collapse li.active > a, .sidebar[data-background-color="white"] .nav.nav-danger > .nav-item .nav-collapse li.active > a {
-      color: #F25961 !important; }
+      color: #f03c02 !important; }
   .sidebar .nav > .nav-item.active > a:before, .sidebar[data-background-color="white"] .nav > .nav-item.active > a:before, .sidebar .nav > .nav-item.active:hover > a:before, .sidebar[data-background-color="white"] .nav > .nav-item.active:hover > a:before, .sidebar .nav > .nav-item a[data-toggle=collapse][aria-expanded=true]:before, .sidebar[data-background-color="white"] .nav > .nav-item a[data-toggle=collapse][aria-expanded=true]:before, .sidebar[data-background-color="white"] .nav > .nav-item.active > a:before, .sidebar[data-background-color="white"] .nav > .nav-item.active:hover > a:before, .sidebar[data-background-color="white"] .nav > .nav-item a[data-toggle=collapse][aria-expanded=true]:before {
     opacity: 1 !important;
     position: absolute;

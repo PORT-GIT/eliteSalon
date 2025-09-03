@@ -14,12 +14,6 @@ urlpatterns = [
 
     path('services-given/', views.ServicesGivenListView.as_view(), name='services-given'),
 
-    path('appointments/', views.AppointmentsListView.as_view(), name='appointments'),
-
-    path('appointments/<int:pk>/', views.AppointmentDetailView.as_view(), name='appointment-detail'),
-
-    path('appointments/<int:pk>/delete', views.AppointmentDeleteView.as_view(), name='delete-appointment'),
-
     # path('services/', views.ServicesListView.as_view(), name='services'),
 
     # New booking calendar URLs
