@@ -44,7 +44,7 @@ class AppointmentBookingForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.customer = kwargs.pop('customer', None)
         super().__init__(*args, **kwargs)
-        self.fields['employeeId'].queryset = EmployeeProfile.objects.filter(is_active=True)
+        self.fields['employeeId'].queryset = EmployeeProfile.objects.filter(work_status='FREE')
         self.fields['employeeId'].label = "Select Stylist"
         
     def clean(self):

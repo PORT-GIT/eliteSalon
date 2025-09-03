@@ -7,7 +7,7 @@ from users.models import CustomerProfile, EmployeeProfile
 import json
 
 
-def reports_dashboard(request):
+def dashboard(request):
     return render(request, 'reports/dashboard.html')
 
 def appointment_report(request):

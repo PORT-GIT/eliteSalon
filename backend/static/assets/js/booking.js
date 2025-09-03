@@ -78,7 +78,8 @@ $(document).ready(function() {
 
     //this will load available time slots via AJAX
     function loadAvailableSlots() {
-            showLoading(true);
+            showLoading(false);
+            //will change false to true if i want the loading to be seen
 
             $.ajax({
                 url: '/salon/get-available-slots/',
@@ -178,10 +179,11 @@ $(document).ready(function() {
 
     //this is to confirm the booking
     $('#confirm-booking').click(function() {
-            showLoading(true);
+            showLoading(false);
+            //will change false to true if i want the loading to be seen
 
             $.ajax({
-                url: 'salon/book-appointment/',
+                url: '/salon/book-appointment/',
                 type: 'POST',
                 headers: {
                     'X-CSRFToken': getCookie('csrftoken')
@@ -206,10 +208,19 @@ $(document).ready(function() {
                         alert('Error:' + response.message);
                     }
                 },
-                error: function(_, __, error) {
+                error: function(xhr, status, error) {
 
-                    showSuccessMessage(error);
-                   
+                    let errorMessage = "Error booking appointment. Please try again.";
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.responseText) {
+
+                        errorMessage = xhr.responseText;
+                    }
+                    alert('errorMessage');
+                    console.error('Booking Error:', error, xhr.responseText);
+                    // this code will inform me of any issue in the console and what is going wrong
                 },
                 complete: function() {
                     showLoading(false);

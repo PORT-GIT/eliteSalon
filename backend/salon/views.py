@@ -1,24 +1,20 @@
-from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, DeleteView
-from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
+from django.contrib import messages
+from django.db import transaction
+from django.http import JsonResponse, QueryDict
+import json
+from django import forms
 from .forms import ServiceForm, ServicesGivenForm, AppointmentBookingForm
 from .models import service, salonAppointment, servicesGiven
-from django.contrib.auth.decorators import login_required
-from django import forms
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-# this imports will help in the view to calculate the time an appointment will take
-import re
-from datetime import time, datetime, timedelta
-from formtools.wizard.views import SessionWizardView
-# this will help in the employee assignment to the appointment
-from django.db.models import Count, Q
 from users.models import EmployeeProfile, CustomerProfile
-from django.db import transaction
+from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime, timedelta, time
+from formtools.wizard.views import SessionWizardView
+from django.db.models import Count, Q
 from django.utils import timezone
-from django.core.serializers import serialize
-import json
 
 class ServicesGivenListView(ListView):
     model = servicesGiven
@@ -29,13 +25,11 @@ class ServicesGivenListView(ListView):
         return servicesGiven.objects.all()
     
 def list_of_services(request):
-
-    return render(request, 'salon/services_list.html')
+    services = service.objects.all()
+    return render(request, 'salon/services_list.html', {'services': services})
 
 def about_us(request):
-
     return render(request, 'salon/about-us.html')
-
 
 class AppointmentsListView(ListView):
     model = salonAppointment
@@ -53,7 +47,6 @@ class AppointmentDeleteView(DeleteView):
     model = salonAppointment
     template_name = 'salon/delete_appointment.html'
     success_url = reverse_lazy('appointments')
-    # this will redirect me to the appointments page after deletion
 
     def delete(self, request, *args, **kwargs):
         messages.success(request, 'Appointment was deleted successfully')
@@ -64,16 +57,12 @@ def create_services(request):
         form = ServiceForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Service has been saved successfully')
             return redirect('services')
-            # the redirect should match the view class
-
     else:
         form = ServiceForm()
-        messages.success(request, 'Service has not been saved successfully')
     
     return render(request, 'salon/add_services.html', {'form': form})
-
-
 
 def create_services_given(request):
     if request.method == 'POST':
@@ -82,67 +71,55 @@ def create_services_given(request):
             form.save()
             messages.success(request, 'Service given has been saved successfully')
             return redirect('add-services-given')
-            # the redirect should match the view class
-        
     else:
         form = ServicesGivenForm()
-        messages.success(request, 'Service given has not been saved successfully')
-
     
     return render(request, 'salon/add_services_given.html', {'form': form})
-
-
-
-
-#to consider the fact that a user won't need to enter their own details i can add the decorator below which will capture their details:
-# @login_required
-# def create_appointments(request):
-#     if request.method == 'POST':
-#         form = AppointmentsForm(request.POST)
-#         if form.is_valid():
-#             # the changes made here and to the form will ensure that the user does not
-#             # select their details manually
-#             # instead, the user will be captured automatically
-#             # it also assigns the logged in user's profile to the appointment model customerID field
-#             appointment = form.save(commit=False)
-#             appointment.customerId = request.user.customer_profile
-#             # customer_profile is added because the user is linked to the customer profile and not the 
-#             # DJANGO USER model
-
-#             services = form.cleaned_data['services']
-#             total_duration = total_services_duration(services)
-
-#             appointment_time = form.cleaned_data['appointmentTime']
-#             appointment.appointmentEndTime = calculate_end_time(appointment_time, total_duration)
-
-#             appointment.save()
-#             form.save_m2m()# this will cater to saving the many services that can be selected
-#             messages.success(request, 'Appointment saved successfully')
-#             return redirect('appointments')
-#             # the redirect should match the view class
-#         else:
-#             messages.error(request, 'Please correct the errors below')
-#     else:
-#         form = AppointmentsForm()
-        
-#     return render(request, 'salon/add_appointments.html', {'form': form})
 
 def booking_calendar(request):
     """Display the interactive booking calendar"""
     services = service.objects.all()
-    employees = EmployeeProfile.objects.all()  # Remove is_active filter
+    employees = EmployeeProfile.objects.all()
     
     context = {
         'services': services,
         'employees': employees,
+        'today': timezone.now().date(),
     }
     return render(request, 'salon/booking_calendar.html', context)
 
 @login_required
+@csrf_exempt
 def book_appointment_ajax(request):
     """Handle appointment booking via AJAX"""
     if request.method == 'POST':
-        form = AppointmentBookingForm(request.POST, customer=request.user.customer_profile)
+        # Parse JSON data from request body
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({
+                'success': False,
+                'message': 'Invalid JSON data'
+            })
+        
+        # Check if user has a customer profile
+        if not hasattr(request.user, 'customer_profile'):
+            return JsonResponse({
+                'success': False,
+                'message': 'User does not have a customer profile'
+            })
+        
+        # Create a QueryDict from the parsed data
+        form_data = QueryDict(mutable=True)
+        for key, value in data.items():
+            if key == 'services' and isinstance(value, list):
+                # For multiple choice fields, add each value separately
+                for service_id in value:
+                    form_data.appendlist(key, service_id)
+            else:
+                form_data[key] = value
+        
+        form = AppointmentBookingForm(form_data, customer=request.user.customer_profile)
         
         if form.is_valid():
             try:
@@ -190,7 +167,7 @@ def book_appointment_ajax(request):
             except Exception as e:
                 return JsonResponse({
                     'success': False,
-                    'message': str(e)
+                    'message': f'Error saving appointment: {str(e)}'
                 })
         else:
             return JsonResponse({
@@ -201,81 +178,149 @@ def book_appointment_ajax(request):
     
     return JsonResponse({'success': False, 'message': 'Invalid request'})
 
-def get_available_slots(request):
-    """Get available time slots for a specific date and employee"""
-    if request.method == 'GET':
-        date_str = request.GET.get('date')
-        employee_id = request.GET.get('employee_id')
+def parse_duration(duration_str):
+    """Convert duration string to timedelta"""
+    if not duration_str:
+        return timedelta()
         
-        try:
-            selected_date = datetime.strptime(date_str, '%Y-%m-%d').date()
-            employee = EmployeeProfile.objects.get(id=employee_id)
-            
-            # Get existing appointments for this date and employee
-            existing_appointments = salonAppointment.objects.filter(
-                employeeId=employee,
-                scheduleDay=selected_date
-            ).order_by('appointmentTime')
-            
-            # Generate available slots (9 AM to 6 PM, 30-minute intervals)
-            available_slots = []
-            start_time = datetime.strptime('09:00', '%H:%M').time()
-            end_time = datetime.strptime('18:00', '%H:%M').time()
-            
-            current_time = datetime.combine(selected_date, start_time)
-            end_datetime = datetime.combine(selected_date, end_time)
-            
-            while current_time < end_datetime:
-                slot_time = current_time.time()
-                
-                # Check if this slot is available
-                is_available = True
-                for appointment in existing_appointments:
-                    if (appointment.appointmentTime <= slot_time < appointment.appointmentEndTime):
-                        is_available = False
-                        break
-                
-                if is_available:
-                    available_slots.append(slot_time.strftime('%H:%M'))
-                
-                current_time += timedelta(minutes=30)
-            
-            return JsonResponse({
-                'success': True,
-                'available_slots': available_slots
-            })
-            
-        except Exception as e:
-            return JsonResponse({
-                'success': False,
-                'message': str(e)
-            })
+    parts = duration_str.split()
+    duration = timedelta()
     
-    return JsonResponse({'success': False, 'message': 'Invalid request'})
+    for i in range(0, len(parts), 2):
+        if i + 1 < len(parts):
+            try:
+                value = int(parts[i])
+                unit = parts[i + 1].lower()
+                
+                if 'hour' in unit:
+                    duration += timedelta(hours=value)
+                elif 'minute' in unit:
+                    duration += timedelta(minutes=value)
+            except (ValueError, IndexError):
+                continue
+                
+    return duration
+
+def get_available_employees(request):
+    """Get available employees for selected services, date, and time"""
+    service_ids = request.GET.getlist('services[]')
+    date_str = request.GET.get('date')
+    time_str = request.GET.get('time')
+
+    if not (service_ids and date_str and time_str):
+        return JsonResponse({'error': 'Missing parameters'}, status=400)
+
+    # Calculate total duration of selected services
+    total_duration = timedelta()
+    for sid in service_ids:
+        try:
+            s = service.objects.get(pk=sid)
+            total_duration += parse_duration(s.durationOfService)
+        except service.DoesNotExist:
+            continue
+
+    try:
+        schedule_day = datetime.strptime(date_str, '%Y-%m-%d').date()
+        appointment_time = datetime.strptime(time_str, '%H:%M').time()
+        appointment_start = datetime.combine(schedule_day, appointment_time)
+        appointment_end = appointment_start + total_duration 
+    except ValueError:
+        return JsonResponse({'error': 'Invalid date or time format'}, status=400)
+
+    # Get employees who are free during the requested time slot
+    available_employees = []
+    for emp in EmployeeProfile.objects.filter(is_active=True):
+        # Check if employee has any conflicting appointments
+        conflict = salonAppointment.objects.filter(
+            employeeId=emp,
+            scheduleDay=schedule_day,
+            appointmentTime__lt=appointment_end.time(),
+            appointmentEndTime__gt=appointment_time
+        ).exists()
+
+        if not conflict:
+            available_employees.append({
+                'id': emp.id,
+                'name': f"{emp.user_profile.first_name} {emp.user_profile.last_name}"
+            })
+
+    return JsonResponse({'employees': available_employees})
+
+def get_available_slots(request):
+    """Get available time slots for selected employee and services"""
+    employee_id = request.GET.get('employee_id')
+    service_ids_str = request.GET.get('services', '')
+    date_str = request.GET.get('date')
+
+    if not (employee_id and date_str):
+        return JsonResponse({'success': False, 'message': 'Missing parameters'}, status=400)
+
+    if service_ids_str:
+        service_ids = [sid.strip() for sid in service_ids_str.split(',') if sid.strip()]
+    else:
+        service_ids = []
+
+    # Calculate total duration of selected services
+    total_duration = timedelta()
+    for sid in service_ids:
+        try:
+            s = service.objects.get(pk=sid)
+            total_duration += parse_duration(s.durationOfService)
+        except service.DoesNotExist:
+            continue
+
+    try:
+        schedule_day = datetime.strptime(date_str, '%Y-%m-%d').date()
+    except ValueError:
+        return JsonResponse({'success': False, 'message': 'Invalid date format'}, status=400)
+
+    # Consider salon working hours (9 AM to 6 PM)
+    start_time = datetime.combine(schedule_day, time(9, 0))
+    end_time = datetime.combine(schedule_day, time(18, 0))
+
+    available_slots = []
+    current_time = start_time
+
+    while current_time + total_duration <= end_time:
+        slot_start = current_time
+        slot_end = current_time + total_duration
+
+        # Check for conflicts with existing appointments
+        conflict = salonAppointment.objects.filter(
+            employeeId_id=employee_id,
+            scheduleDay=schedule_day,
+            appointmentTime__lt=slot_end.time(),
+            appointmentEndTime__gt=slot_start.time()
+        ).exists()
+
+        if not conflict:
+            available_slots.append(slot_start.strftime('%H:%M'))
+
+        # Move to next slot (15-minute intervals)
+        current_time += timedelta(minutes=15)
+
+    return JsonResponse({'success': True, 'available_slots': available_slots})
 
 def get_service_details(request):
     """Get details for selected services"""
     if request.method == 'GET':
         service_ids = request.GET.get('services', '').split(',')
+        if not service_ids or service_ids[0] == '':
+            return JsonResponse({
+                'success': True,
+                'total_price': 0,
+                'total_duration': 0,
+                'services': []
+            })
         
         try:
             services = service.objects.filter(id__in=service_ids)
             
-            total_price = sum(service.price for service in services)
+            total_price = sum(s.price for s in services)
             total_duration = timedelta()
             
             for service_obj in services:
-                duration_str = service_obj.durationOfService
-                duration_parts = duration_str.split()
-                
-                for i in range(0, len(duration_parts), 2):
-                    if i + 1 < len(duration_parts):
-                        value = int(duration_parts[i])
-                        unit = duration_parts[i + 1]
-                        if 'hour' in unit:
-                            total_duration += timedelta(hours=value)
-                        elif 'minute' in unit:
-                            total_duration += timedelta(minutes=value)
+                total_duration += parse_duration(service_obj.durationOfService)
             
             total_minutes = total_duration.total_seconds() / 60
             

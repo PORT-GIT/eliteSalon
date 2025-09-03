@@ -24,8 +24,15 @@ urlpatterns = [
 
     # New booking calendar URLs
     path('booking-calendar/', views.booking_calendar, name='booking-calendar'),
+
     path('book-appointment/', views.book_appointment_ajax, name='book-appointment-ajax'),
+
     path('get-available-slots/', views.get_available_slots, name='get-available-slots'),
+
     path('get-service-details/', views.get_service_details, name='get-service-details'),
+
+    path('get-available-employees/', views.get_available_employees, name='get-available-employees'),
+
+
 
 ]
