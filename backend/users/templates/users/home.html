@@ -8,8 +8,8 @@
     <div class="topbar d-flex align-items-center light-background">
       <div class="container d-flex justify-content-center justify-content-md-between">
         <div class="contact-info d-flex align-items-center">
-          <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:contact@example.com">contact@example.com</a></i>
-          <i class="bi bi-phone d-flex align-items-center ms-4"><span>+1 5589 55488 55</span></i>
+          <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:contact@example.com">elitechic@gmail.com</a></i>
+          <i class="bi bi-phone d-flex align-items-center ms-4"><span>+254 789 678 111</span></i>
         </div>
         <div class="social-links d-none d-md-flex align-items-center">
           <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
@@ -23,31 +23,52 @@
     <div class="branding d-flex align-items-cente">
 
       <div class="container position-relative d-flex align-items-center justify-content-between">
-        <a href="index.html" class="logo d-flex align-items-center">
+        <a href="index.html" class="logo d-flex align-items-center col-md-3">
           <!-- Uncomment the line below if you also wish to use an image logo -->
           <!-- <img src="assets/img/logo.png" alt=""> -->
           <h1 class="sitename">Elite Chic</h1>
+          
         </a>
+
+        
+            <div class="welcome-user">
+              {% if user.is_authenticated %}
+                <h5 style="font-weight: 600; padding-right: 70px; text-decoration: underline;" >Welcome, {{ user.get_full_name }}!</h5>
+              {% endif %}
+            </div>
+
+          
 
         <nav id="navmenu" class="navmenu">
           <ul>
+            
+            {% if user.is_authenticated %}
+            
             <li><a href="{% url 'homepage' %}" class="active">Home<br></a></li>
 
             <li><a href="{% url 'services-list' %}">Services<br></a></li>
+            <li><a href="{% url 'user-logout' %}">Logout</a></li>
+            {% else %}
 
-            <li><a href="{% url 'register-customer' %}">Register Customer</a></li>
+            <li><a href="{% url 'homepage' %}" class="active">Home<br></a></li>
 
-            <li><a href="{% url 'employee-register-step' step=1 %}">Register Employee</a></li>
-           
+            <li><a href="{% url 'services-list' %}">Services<br></a></li>
+            <!-- there are two of these links because when a user logouts they cannot see the homepage and the services link
+             that is why these are here to avoid that -->
+
+            <li><a href="{% url 'register-customer' %}">Sign Up</a></li>
+
             <li><a href="{% url 'login' %}">Login</a></li>
+            {% endif %}
+            <li><a href="{% url 'booking-calendar' %}">Book Now</a></li>
             
             <li><a href="{% url 'about-us' %}">About Us</a></li>
 
-            <li><a href="{% url 'booking-calendar' %}">
-              <button class=" btn btn-lg btn-secondary">Book Now</button></a>
-            </li>
-
+            {% if user.is_superuser %}
             <li><a href="{% url 'dashboard' %}">Admin</a></li>
+
+            <li><a href="{% url 'employee-register-step' step=1 %}">Register Employee</a></li>
+            {% endif %}
           </ul>
           <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         </nav>
@@ -355,17 +376,16 @@
         <div class="row gy-4">
           <div class="col-lg-4 col-md-6 footer-about">
             <a href="home.html" class="logo d-flex align-items-center">
-              <span class="sitename">Flattern</span>
+              <span class="sitename">EliteChic</span>
             </a>
             <div class="footer-contact pt-3">
-              <p>A108 Adam Street</p>
-              <p>New York, NY 535022</p>
-              <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
-              <p><strong>Email:</strong> <span>info@example.com</span></p>
+              <p>Kihunguro, Ruiru</p>
+              <p class="mt-3"><strong>Phone:</strong> <span>+254 789 678 111</span></p>
+              <p><strong>Email:</strong> <span>elitechic@gmail.com</span></p>
             </div>
           </div>
 
-          <div class="col-lg-2 col-md-3 footer-links">
+          <div class="col-lg-4 footer-links">
             <h4>Useful Links</h4>
             <ul>
               <li><a href="{% url 'homepage' %}">Home</a></li>
@@ -374,27 +394,14 @@
             </ul>
           </div>
 
-          <div class="col-lg-2 col-md-3 footer-links">
-            <h4>Our Services</h4>
-            <ul>
-              <li><a href="#">Web Design</a></li>
-              <li><a href="#">Web Development</a></li>
-              <li><a href="#">Product Management</a></li>
-              <li><a href="#">Marketing</a></li>
-              <li><a href="#">Graphic Design</a></li>
-            </ul>
-          </div>
 
-
-          <div class="col-lg-2 col-md-3 footer-links">
-            <h4>Nobis illum</h4>
-            <ul>
-              <li><a href="#">Ipsam</a></li>
-              <li><a href="#">Laudantium dolorum</a></li>
-              <li><a href="#">Dinera</a></li>
-              <li><a href="#">Trodelas</a></li>
-              <li><a href="#">Flexo</a></li>
-            </ul>
+          <div class="col-lg-4 footer-links newsletter">
+            <h4>Subscribe to Our Newsletter</h4>
+            <form action="post" class="subscribe">
+              {% csrf_token %}
+              <input type="email" class="subscribe-form" placeholder="Enter your email address">
+              <button class="btn-subscirbe mt-4" type="submit">Subscribe</button>
+            </form>
           </div>
 
         </div>
@@ -406,14 +413,14 @@
 
         <div class="d-flex flex-column align-items-center align-items-lg-start">
           <div>
-            © Copyright <strong><span>MyWebsite</span></strong>. All Rights Reserved
+            © Copyright <strong><span>MK</span></strong>. All Rights Reserved
           </div>
           <div class="credits">
             <!-- All the links in the footer should remain intact. -->
             <!-- You can delete the links only if you purchased the pro version. -->
             <!-- Licensing information: https://bootstrapmade.com/license/ -->
             <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/herobiz-bootstrap-business-template/ -->
-            Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+            Used by MK
           </div>
         </div>
 

@@ -2,36 +2,85 @@
 // booking calendar page
 
 $(document).ready(function() {
-    //this will initializa the variables
+    //this will initialize the variables
     let selectedServices = [];
     let selectedDate = null;
     let selectedTime = null;
     let selectedEmployee = null;
     let serviceDetails = {};
 
-    // this fucntion is to extract service details from the page
+    // this function is to extract service details from the page
+    //this code block allows JS to quickly look into the data about services which can be used on the booking section of the system
+    // this makes calculcation faster and the UI loads smoothly
     $('.service-checkbox').each(function() {
             const serviceId = $(this).val();
             const price = parseFloat($(this).data('price'));
-            const duration = parseInt($(this).data('duration'));
             const name = $(this).next('label').contents().first().text().trim().split(' - ')[0];
+            const durationStr = $(this).data('duration'); //this calls on the time data whichin in HH:MM:SS
+            const formatted = formatDuration(durationStr);
+            $(this).closest('.form-check').find('small').text(formatted);
 
             serviceDetails[serviceId] = {
                 name: name,
                 price: price,
-                duration: duration
+                duration: durationStr
             };
 
     });
 
+    function parseDuration(durationStr) {
+        const parts = durationStr.split(':');
+        const hours = parseInt(parts[0], 10) || 0;
+        const minutes = parseInt(parts[1], 10) || 0;
+        return hours * 60 + minutes;
+
+    }
+
+    //this function will change the format in which the time is being displayed from HH:MM:SS to something like 1 hour 45 mins
+    function formatDuration(durationStr) {
+        //this will use the data that is  hh:mm:ss format like it is in the database and convert it to human readable time like 1 hour and 45 minutes
+        const parts = durationStr.split(':');
+        const hours = parseInt(parts[0], 10) || 0;
+        const minutes = parseInt(parts[1], 10) || 0;
+        let result = '';
+        if (hours > 0) result += `${hours} hour${hours > 1 ? 's' : ''}`;
+        //this means that when a hour number is more than 0 add the label of hour and if it is more than 1 hour add an (s) 
+        if (hours > 0  && minutes > 0) result += ' ';
+        if (minutes > 0) result += `${minutes} minute${minutes > 1 ? 's' : ''}`;
+        if (result === '') result = '0 minutes';
+        return result
+    }
+
+    function updateTotalDuration() {
+        let totalMinutes = 0;
+        $('.service-checkbox:checked').each(function() {
+            const duration = $(this).data('duration');
+            totalMinutes += parseDuration(duration);
+        });//this will sum the duration by converting time from hh:mm:ss to minutes
+
+        //this converts  the time from minutes back to HH:MM:SS
+        const hhmmss = minutesToHHMMSS(totalMinutes);
+        $('#total-duration').text(formatDuration(hhmmss));
+    }
+
+    // since I am changing the time format to be like {1 hour 45 minutes} in order to calculate the total service 
+    //time i will need to convert the time back to HH:MM:SS format for calculation and then will be converted back to human readable format after the calculation is complete
+    function minutesToHHMMSS(totalMinutes) {
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        return`${hours}:${minutes < 10 ? '0' : ''}${minutes}:00`;
+    }
+    
     //this function is to enable service selection
     $('.service-checkbox').change(function() {
             selectedServices = [];
             $('.service-checkbox:checked').each(function() {
                 selectedServices.push($(this).val());
             });
+
             updateServiceDetails();
             updateBookingSummary();
+            updateTotalDuration();
     });
 
     //selection for the date and employee
@@ -66,13 +115,13 @@ $(document).ready(function() {
             selectedServices.forEach(function(serviceId) {
                if (serviceDetails[serviceId]) {
                     totalPrice += serviceDetails[serviceId].price;
-                    totalDuration += serviceDetails[serviceId].duration;
+                    totalDuration += parseDuration(serviceDetails[serviceId].duration);
                 }
 
             });
 
             $('#total-price').text(totalPrice.toFixed(2));
-            $('#total-duration').text(totalDuration);
+            $('#total-duration').text(formatDuration(minutesToHHMMSS(totalDuration)));
 
     }
 
@@ -130,10 +179,10 @@ $(document).ready(function() {
                 selectedServices.forEach(function(serviceId) {
                     if (serviceDetails[serviceId]) {
                         servicesList += `<li>
-                        ${serviceDetails[serviceId].name} - $${serviceDetails[serviceId].price.toFixed(2)}
+                        ${serviceDetails[serviceId].name} - ${serviceDetails[serviceId].price.toFixed(2)}
                         </li>`;
                         totalPrice += serviceDetails[serviceId].price;
-                        totalDuration += serviceDetails[serviceId].duration;
+                        totalDuration += parseDuration(serviceDetails[serviceId].duration);
                     }
                 });
 
@@ -145,7 +194,7 @@ $(document).ready(function() {
                     <p><strong>Time:</strong> ${selectedTime} </p>
                     <p><strong>Stylist:</strong> ${$('#employee-select option:selected').text()} </p>
                     <p><strong>Total Price:</strong> ${totalPrice.toFixed(2)}</p>
-                    <p><strong>Duration:</strong> ${totalDuration} minutes </p>
+                    <p><strong>Duration:</strong> ${formatDuration(minutesToHHMMSS(totalDuration))}</p>
                 `;
 
                 $('#booking-summary').html(summary);
@@ -172,48 +221,7 @@ $(document).ready(function() {
     }
 
     //this will enable the appointment booking handler
-        $('#book-appointment-btn').click(function() {
-            $('#modal-summary-content').html($('#booking-summary').html());
-            $('#bookingModal').modal('show');
-    });
-
-    // Function to validate booking data before sending
-    function validateBookingData() {
-        let errors = [];
-
-        if (selectedServices.length === 0) {
-            errors.push('Please select at least one service.');
-        }
-
-        if (!selectedDate) {
-            errors.push('Please select a date.');
-        } else {
-            const selectedDateObj = new Date(selectedDate);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            if (selectedDateObj < today) {
-                errors.push('Please select a date that is not in the past.');
-            }
-        }
-
-        if (!selectedTime) {
-            errors.push('Please select a time slot.');
-        }
-
-        if (!selectedEmployee) {
-            errors.push('Please select a stylist.');
-        }
-
-        if (errors.length > 0) {
-            alert('Please correct the following errors:\n' + errors.join('\n'));
-            return false;
-        }
-
-        return true;
-    }
-
-    //this is to confirm the booking
-    $('#confirm-booking').click(function(e) {
+        $('#book-appointment-btn').click(function(e) {
             e.preventDefault();
             showLoading(false);
             //will change false to true if i want the loading to be seen
@@ -237,14 +245,13 @@ $(document).ready(function() {
                     'X-CSRFToken': getCookie('csrftoken')
                 },
                 data: {
-                    services: selectedServices,
+                    services: selectedServices.join(','),
                     scheduleDay: selectedDate,
                     appointmentTime: selectedTime,
                     employeeId: selectedEmployee
                 },
                 success: function(response) {
                     if (response.success) {
-                        $('#bookingModal').modal('hide');
                         showSuccessMessage('Appointment booked successfully!');
                         //this will redirect to another page or clear the form after a successfull booking
 
@@ -283,6 +290,43 @@ $(document).ready(function() {
             });
 
         });
+
+    // Function to validate booking data before sending
+    function validateBookingData() {
+        let errors = [];
+
+        if (selectedServices.length === 0) {
+            errors.push('Please select at least one service.');
+        }
+
+        if (!selectedDate) {
+            errors.push('Please select a date.');
+        } else {
+            const selectedDateObj = new Date(selectedDate);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            if (selectedDateObj < today) {
+                errors.push('Please select a date that is not in the past.');
+            }
+        }
+
+        if (!selectedTime) {
+            errors.push('Please select a time slot.');
+        }
+
+        if (!selectedEmployee) {
+            errors.push('Please select a stylist.');
+        }
+
+        if (errors.length > 0) {
+            alert('Please correct the following errors:\n' + errors.join('\n'));
+            return false;
+        }
+
+        return true;
+    }
+
+
 
     });
 

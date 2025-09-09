@@ -16,77 +16,68 @@ from formtools.wizard.views import SessionWizardView
 from django.db.models import Count, Q
 from django.utils import timezone
 
-class ServicesGivenListView(ListView):
-    model = servicesGiven
-    template_name = 'salon/services_given.html'
-    context_object_name = 'services_given'
-
-    def get_queryset(self):
-        return servicesGiven.objects.all()
+def services_list(request):
     
-def list_of_services(request):
-    services = service.objects.all()
-    return render(request, 'salon/services_list.html', {'services': services})
+    return render(request, 'salon/services_list.html')
 
-def about_us(request):
-    return render(request, 'salon/about-us.html')
+@login_required
+def services_given_survey(request, appointment_id=None):
+    from .forms import ServicesGivenForm
+    from django.contrib import messages
 
-class AppointmentsListView(ListView):
-    model = salonAppointment
-    template_name = 'salon/appointments.html'
-    context_object_name = 'appointments'
-
-    def get_queryset(self):
-        return salonAppointment.objects.all()
-    
-class AppointmentDetailView(DetailView):
-    model = salonAppointment
-    template_name = 'salon/appointment_detail.html'
-
-class AppointmentDeleteView(DeleteView):
-    model = salonAppointment
-    template_name = 'salon/delete_appointment.html'
-    success_url = reverse_lazy('appointments')
-
-    def delete(self, request, *args, **kwargs):
-        messages.success(request, 'Appointment was deleted successfully')
-        return super().delete(request, *args, **kwargs)
-    
-def create_services(request):
-    if request.method == 'POST':
-        form = ServiceForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Service has been saved successfully')
-            return redirect('services')
-    else:
-        form = ServiceForm()
-    
-    return render(request, 'salon/add_services.html', {'form': form})
-
-def create_services_given(request):
     if request.method == 'POST':
         form = ServicesGivenForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Service given has been saved successfully')
-            return redirect('add-services-given')
+            messages.success(request, 'Thank you for your feedback!')
+            return redirect('services-given-survey')
+        else:
+            messages.error(request, 'Please correct the errors below.')
     else:
-        form = ServicesGivenForm()
-    
-    return render(request, 'salon/add_services_given.html', {'form': form})
+        initial_data = {}
+        if appointment_id:
+            try:
+                appointment = salonAppointment.objects.get(id=appointment_id)
+                initial_data = {
+                    'salonAppointmentId': appointment,
+                    'customerId': appointment.customerId,
+                    'employeeId': appointment.employeeId,
+                    # For multiple services, this might need adjustment
+                    'servicesId': appointment.services.first() if appointment.services.exists() else None
+                }
+            except salonAppointment.DoesNotExist:
+                messages.error(request, 'Appointment not found.')
+                return redirect('services-given-survey')
+        form = ServicesGivenForm(initial=initial_data)
 
+    context = {
+        'form': form,
+        'is_customer': hasattr(request.user, 'customer_profile'),
+        'is_employee': hasattr(request.user, 'employee_profile'),
+        'is_admin': request.user.is_superuser or request.user.is_staff,
+        'appointment_id': appointment_id,
+    }
+    return render(request, 'salon/services_given_survey.html', context)
+
+def about_us(request):
+    return render(request, 'salon/about-us.html')
+
+
+@login_required
 def booking_calendar(request):
     """Display the interactive booking calendar"""
     services = service.objects.all()
     employees = EmployeeProfile.objects.all()
-    
-    context = {
+    today = timezone.now().date()
+
+    return render(request, 'salon/booking_calendar.html', {
         'services': services,
         'employees': employees,
         'today': timezone.now().date(),
-    }
-    return render(request, 'salon/booking_calendar.html', context)
+    })
+
+    
+    
 
 @login_required
 @csrf_exempt
@@ -119,50 +110,37 @@ def book_appointment_ajax(request):
                 form_data[key] = value
 
         form = AppointmentBookingForm(form_data, customer=request.user.customer_profile)
-        
+
         if form.is_valid():
             try:
                 with transaction.atomic():
                     appointment = form.save(commit=False)
                     appointment.customerId = request.user.customer_profile
-                    
+
                     # Calculate end time based on services
                     services = form.cleaned_data['services']
                     total_duration = timedelta()
-                    
+
                     for service_obj in services:
-                        duration_str = service_obj.durationOfService
-                        duration_parts = duration_str.split()
-                        duration = timedelta()
-                        
-                        for i in range(0, len(duration_parts), 2):
-                            if i + 1 < len(duration_parts):
-                                value = int(duration_parts[i])
-                                unit = duration_parts[i + 1]
-                                if 'hour' in unit:
-                                    duration += timedelta(hours=value)
-                                elif 'minute' in unit:
-                                    duration += timedelta(minutes=value)
-                        
-                        total_duration += duration
-                    
+                        total_duration += service_obj.new_durationOfService
+
                     # Calculate end time
                     appointment_datetime = datetime.combine(
                         form.cleaned_data['scheduleDay'],
                         form.cleaned_data['appointmentTime']
                     )
                     appointment_end = appointment_datetime + total_duration
-                    
+
                     appointment.appointmentEndTime = appointment_end.time()
                     appointment.save()
                     form.save_m2m()
-                    
+
                     return JsonResponse({
                         'success': True,
                         'message': 'Appointment booked successfully!',
                         'appointment_id': appointment.id
                     })
-                    
+
             except Exception as e:
                 return JsonResponse({
                     'success': False,
@@ -175,31 +153,9 @@ def book_appointment_ajax(request):
             'message': 'Please correct the errors below',
             'errors': form.errors
         })
-    
+
     return JsonResponse({'success': False, 'message': 'Invalid request'})
 
-def parse_duration(duration_str):
-    """Convert duration string to timedelta"""
-    if not duration_str:
-        return timedelta()
-        
-    parts = duration_str.split()
-    duration = timedelta()
-    
-    for i in range(0, len(parts), 2):
-        if i + 1 < len(parts):
-            try:
-                value = int(parts[i])
-                unit = parts[i + 1].lower()
-                
-                if 'hour' in unit:
-                    duration += timedelta(hours=value)
-                elif 'minute' in unit:
-                    duration += timedelta(minutes=value)
-            except (ValueError, IndexError):
-                continue
-                
-    return duration
 
 def get_available_employees(request):
     """Get available employees for selected services, date, and time"""
@@ -211,19 +167,19 @@ def get_available_employees(request):
         return JsonResponse({'error': 'Missing parameters'}, status=400)
 
     # Calculate total duration of selected services
-    total_duration = timedelta()
-    for sid in service_ids:
-        try:
-            s = service.objects.get(pk=sid)
-            total_duration += parse_duration(s.durationOfService)
-        except service.DoesNotExist:
-            continue
+    # total_duration = timedelta()
+    # for sid in service_ids:
+    #     try:
+    #         s = service.objects.get(pk=sid)
+    #         total_duration += parse_duration(s.durationOfService)
+    #     except service.DoesNotExist:
+    #         continue
 
     try:
         schedule_day = datetime.strptime(date_str, '%Y-%m-%d').date()
         appointment_time = datetime.strptime(time_str, '%H:%M').time()
         appointment_start = datetime.combine(schedule_day, appointment_time)
-        appointment_end = appointment_start + total_duration 
+        # appointment_end = appointment_start + total_duration
     except ValueError:
         return JsonResponse({'error': 'Invalid date or time format'}, status=400)
 
@@ -234,7 +190,7 @@ def get_available_employees(request):
         conflict = salonAppointment.objects.filter(
             employeeId=emp,
             scheduleDay=schedule_day,
-            appointmentTime__lt=appointment_end.time(),
+            # appointmentTime__lt=appointment_end.time(),
             appointmentEndTime__gt=appointment_time
         ).exists()
 
@@ -265,7 +221,7 @@ def get_available_slots(request):
     for sid in service_ids:
         try:
             s = service.objects.get(pk=sid)
-            total_duration += parse_duration(s.durationOfService)
+            total_duration += s.new_durationOfService
         except service.DoesNotExist:
             continue
 
@@ -302,7 +258,7 @@ def get_available_slots(request):
     return JsonResponse({'success': True, 'available_slots': available_slots})
 
 def get_service_details(request):
-    """Get details for selected services"""
+    # this will get details for selected services
     if request.method == 'GET':
         service_ids = request.GET.get('services', '').split(',')
         if not service_ids or service_ids[0] == '':
@@ -312,29 +268,30 @@ def get_service_details(request):
                 'total_duration': 0,
                 'services': []
             })
-        
+
         try:
             services = service.objects.filter(id__in=service_ids)
-            
+
             total_price = sum(s.price for s in services)
             total_duration = timedelta()
-            
+
             for service_obj in services:
-                total_duration += parse_duration(service_obj.durationOfService)
-            
-            total_minutes = total_duration.total_seconds() / 60
-            
+                if service_obj.new_durationOfService:
+                    total_duration += service_obj.new_durationOfService
+
+            total_minutes = int(total_duration.total_seconds() // 60)
+
             return JsonResponse({
                 'success': True,
                 'total_price': total_price,
                 'total_duration': int(total_minutes),
                 'services': [{'name': s.service_name, 'price': s.price} for s in services]
             })
-            
+
         except Exception as e:
             return JsonResponse({
                 'success': False,
                 'message': str(e)
             })
-    
+
     return JsonResponse({'success': False, 'message': 'Invalid request'})

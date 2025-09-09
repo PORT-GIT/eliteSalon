@@ -369,3 +369,86 @@
 /*--------------------------------------------------------------
 # Booking Template Section
 --------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# Login Template Section
+--------------------------------------------------------------*/
+.login-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 30px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: var(--surface-color);
+}
+
+.login-container form {
+  padding: 20px;
+  text-align: center;
+  justify-content: center;
+}
+
+.directclient {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.btn-login {
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 1px;
+  display: inline-block;
+  padding: 8px 50px;
+  margin: 10px;
+  border-radius: 20px;
+  color: #060606;
+  border: 2px solid var(--accent-color);
+  background-color: #ffffff;
+}
+
+.btn-login:hover {
+  background-color: #252525;
+  color: var(--contrast-color);
+}
+/*--------------------------------------------------------------
+# Login Template Section
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# Subscribe Footer Template Section
+--------------------------------------------------------------*/
+.subscribe {
+  display: flex;
+  flex-direction: column;
+}
+
+.subscribe input[type="email"] {
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.subscribe button[type="submit"] {
+  border-radius: 10px;
+  background-color: #f03c02;
+  color: var(--contrast-color);
+  padding: 7px;
+}
+
+.subscribe button[type="submit"]:hover {
+  transition: 0.5s;
+  background-color: var(--contrast-color);
+  color: #f03c02;
+  
+}
+
+@media (max-height: 500px), (max-width:780px) {
+  .subscribe input[type="email"], button[type="submit"] {
+    width: 300px;
+    box-sizing: border-box;
+  }
+}
+
+/*--------------------------------------------------------------
+# Subscribe Footer Template Section
+--------------------------------------------------------------*/

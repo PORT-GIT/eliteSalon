@@ -26,6 +26,8 @@ urlpatterns = [
 
     path('valuable-reports/', views.valuable_reports, name='valuable_reports'),
 
+    
+
 ]
 
 

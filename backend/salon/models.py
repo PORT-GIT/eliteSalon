@@ -7,7 +7,7 @@ class service(models.Model):
     service_name = models.CharField(null=False, max_length=25,unique=True)
     price = models.IntegerField(null=False)
     description = models.TextField(null=False, max_length=400)
-    durationOfService = models.CharField(null=False, max_length=20)
+    new_durationOfService = models.DurationField(null=True, blank=False)
     createdAt = models.DateField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
 
@@ -16,6 +16,21 @@ class service(models.Model):
 
     def __str__(self):
         return self.service_name
+
+    @property
+    def formatted_duration(self):
+        if self.new_durationOfService:
+            total_seconds = int(self.new_durationOfService.total_seconds())
+            hours = total_seconds // 3600
+            minutes = (total_seconds % 3600) // 60
+            if hours > 0:
+                if minutes > 0:
+                    return f"{hours} hour{'s' if hours > 1 else ''} {minutes} minute{'s' if minutes != 1 else ''}"
+                else:
+                    return f"{hours} hour{'s' if hours > 1 else ''}"
+            else:
+                return f"{minutes} minute{'s' if minutes != 1 else ''}"
+        return "0 minutes"
 
 class salonAppointment(models.Model):
     APPOINTMENT_STATUS = (

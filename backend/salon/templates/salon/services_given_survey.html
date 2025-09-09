@@ -1,0 +1,117 @@
+{% extends 'reports_base.html' %}
+{% load static %}
+
+{% block title %}
+    Services Given Survey
+{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+    <div class="page-inner">
+        <div class="page-header">
+            <h3 class="fw-bold mb-3">Services Given Survey</h3>
+            <ul class="breadcrumbs mb-3">
+                <li class="nav-home">
+                    <a href="#">
+                        <i class="icon-home"></i>
+                    </a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Survey</a>
+                </li>
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Feedback</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Please provide your feedback</div>
+                    </div>
+                    <div class="card-body">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        {% if is_admin %}
+                            <div class="alert alert-info">
+                                <h5>Admin Access</h5>
+                                <p>As an administrator, you can view and manage survey responses. Use the appointment ID to pre-fill the form for specific appointments.</p>
+                                {% if appointment_id %}
+                                    <p><strong>Current Appointment ID:</strong> {{ appointment_id }}</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                        <form method="post" id="surveyForm">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!-- Hidden fields for appointment, customer, employee -->
+                                    {{ form.salonAppointmentId }}
+                                    {{ form.customerId }}
+                                    {{ form.employeeId }}
+                                    {{ form.servicesId }}
+
+                                    {% if is_customer or is_admin %}
+                                        <div class="form-group">
+                                            <label for="{{ form.customerRating.id_for_label }}">Rate the Service (1-5)</label>
+                                            {{ form.customerRating }}
+                                            {% if form.customerRating.errors %}
+                                                <div class="text-danger">{{ form.customerRating.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="{{ form.customerComment.id_for_label }}">Your Comments</label>
+                                            {{ form.customerComment }}
+                                            {% if form.customerComment.errors %}
+                                                <div class="text-danger">{{ form.customerComment.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+
+                                    {% if is_employee or is_admin %}
+                                        <div class="form-group">
+                                            <label for="{{ form.employeeRating.id_for_label }}">Rate the Customer (1-5)</label>
+                                            {{ form.employeeRating }}
+                                            {% if form.employeeRating.errors %}
+                                                <div class="text-danger">{{ form.employeeRating.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="{{ form.employeeComment.id_for_label }}">Your Comments</label>
+                                            {{ form.employeeComment }}
+                                            {% if form.employeeComment.errors %}
+                                                <div class="text-danger">{{ form.employeeComment.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-action">
+                        <button type="submit" form="surveyForm" class="btn btn-success">Submit Feedback</button>
+                        <button class="btn btn-danger">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
