@@ -22,6 +22,11 @@ urlpatterns = [
     path('', views.homepage, name='homepage'),
     # this will ensure that the homepage is accessible at the root URL
 
+    path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    # this is the URL to the admin dashboard
+
+    # path('redirect-after-login/', views.redirect_after_login, name='redirect-after-login' )
+
     
 ]
 

@@ -29,7 +29,7 @@
         <div class="sidebar-logo">
           <!-- Logo Header -->
           <div class="logo-header" data-background-color="dark">
-            <a href="{% url 'dashboard' %}" class="logo">
+            <a href="{% url 'admin_dashboard' %}" class="logo">
               
               <h1 style="height: 20px; color: #fff; font-weight: 600;" class="navbar-brand">EliteChic Beauty Parlor</h1>
             </a>
@@ -51,7 +51,7 @@
           <div class="sidebar-content">
             <ul class="nav nav-secondary">
               <li class="nav-item active">
-                <a href="{% url 'dashboard' %}" aria-expanded="false">
+                <a href="{% url 'admin_dashboard' %}" aria-expanded="false">
                   <i class="fas fa-home"></i>
                   <p>Dashboard</p>
                 </a>
@@ -323,7 +323,7 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">Account Setting</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{% url 'homepage' %}">Logout</a>
+                        <a class="dropdown-item" href="{% url 'user-logout' %}">Logout</a>
                       </li>
                     </div>
                   </ul>

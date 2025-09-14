@@ -11,17 +11,14 @@ def homepage(request):
     return render(request, 'users/home.html')
 
 
-# @employee_required
 def employee_dashboard(request):
     return render(request, 'users/employee_dashboard.html')
 
-# @customer_required
 def customer_dashboard(request):
     return render(request, 'users/customer_dashboard.html')
 
-# @admin_required
 def admin_dashboard(request):
-    return render(request, 'reports/dashboard.html')
+    return render(request, 'users/dashboard.html')
 
 # @admin_required
 def delete_employee(request, pk):
@@ -65,7 +62,12 @@ def user_login(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('homepage')
+                if user.is_superuser:
+                    return redirect('admin_dashboard')
+                
+                else:
+                    return redirect('homepage')
+                
             else:
                 form.add_error(None, "Invalid username or password")
     else:
@@ -73,6 +75,21 @@ def user_login(request):
     return render(request, 'users/login.html', {'form': form})
 
 def user_logout(request):
-    logout(request)
+    # for any conditional statement about log-outs
+    # i need to confirm the stype of user before logging out so that they are directed to the required place
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            logout(request)
+            return redirect('login')
+          
+        else:
+            logout(request)
+            return redirect('homepage')
+
+    #if user is not authenticated they go to homepage
+
     return redirect('homepage')
+
+
+
 

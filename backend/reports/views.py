@@ -11,11 +11,11 @@ def dashboard(request):
 
 def customer_list(request):
     customers = CustomerProfile.objects.all().select_related('user_profile')
-    return render(request, 'reports/customers.html', {'customers': customers})
+    return render(request, 'reports/list_of_customers.html', {'customers': customers})
 
 def employee_list(request):
     employees = EmployeeProfile.objects.all().select_related('user_profile')
-    return render(request, 'reports/employees.html', {'employees': employees})
+    return render(request, 'reports/list_of_employees.html', {'employees': employees})
 
 def appointment_list(request):
     appointments = salonAppointment.objects.all().select_related('customerId__user_profile', 'employeeId__user_profile')
@@ -25,7 +25,7 @@ def appointment_list(request):
     if status:
         appointments = appointments.filter(appointmentStatus=status)
         
-    return render(request, 'reports/appointments.html', {'appointments': appointments})
+    return render(request, 'reports/list_of_appointments.html', {'appointments': appointments})
 
 # def appointment_report(request):
 #     appointments = salonAppointment.objects.all()
