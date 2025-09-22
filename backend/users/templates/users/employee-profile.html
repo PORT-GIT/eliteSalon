@@ -144,16 +144,7 @@
                                 {% endfor %}
                               </td>
 
-                              <td>
-                                {% with total=0 %}
-                                  {% for service in appointment.services.all %}
-                                    {% with total=total|add:service.price %}
-                                    {% endwith %}
-                                  {% endfor %}
-
-                                  {{ total }}
-                                {% endwith %}
-                              </td>
+                              <td>{{ appointment.total_price }}</td>
 
                               <!-- this is the button to write a review  -->
                               <td>

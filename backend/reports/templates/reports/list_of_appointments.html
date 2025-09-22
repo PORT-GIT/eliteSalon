@@ -23,75 +23,7 @@
               </ul>
             </div>
 
-              <div class="col-md-12">
-                <div class="card">
-                  <div class="card-header">
-                    <h4 class="card-title">Multi Filter Select</h4>
-                  </div>
-                  <div class="card-body">
-                    <div class="table-responsive">
-                      <table
-                        id="multi-filter-select"
-                        class="display table table-striped table-hover"
-                      >
-                        <thead>
-                          <tr>
-                            <th>Appointment ID</th>
-                            <th>Customer Name</th>
-                            <th>Services Selected</th>
-                            <th>Employee Name</th>
-                            <th>Scheduled Day</th>
-                            <th>Start of Appointment</th>
-                            <th>End of Appointment</th>
-                            <th>Updated At</th>
-                          </tr>
-                        </thead>
-                        
-                        <tbody>
-                          {% for appointment in appointments %}
-                          <tr>
-                            <td>{{ appointment.id}} </td>
-                            <td>{{ appointment.customerId.user_profile.get_full_name }}</td>
-                            
-                            <td>
-                              {% for service in appointment.services.all %}
-                                {{ service.service_name}}{% if not forloop.last %}, {% endif %}
-                              {% endfor %}
-                              <!-- this will loop through the services offered by an employee -->
-                            </td>
-
-                            <td>{{ appointment.employeeId.user_profile.get_full_name }}</td>
-                            <td>{{ appointment.scheduleDay }}</td>
-                            <td>{{ appointment.appointmentTime }}</td>
-                            <td>{{ appointment.appointmentEndTime }}</td>
-                            <td>{{ appointment.updatedAt }}</td>
-                          </tr>
-                          {% empty %}
-                          <tr>
-                            <td colspan="6">No appointments found.</td>
-                          </tr>    
-
-                          {% endfor %}
-                        </tbody>
-
-                        <tfoot>
-                          <tr>
-                            <th>Appointment ID</th>
-                            <th>Customer Name</th>
-                            <th>Services Selected</th>
-                            <th>Employee Name</th>
-                            <th>Scheduled Day</th>
-                            <th>Start of Appointment</th>
-                            <th>End of Appointment</th>
-                            <th>Updated At</th>
-
-                          </tr>
-                        </tfoot>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              
 
               <div class="col-md-12">
                 <div class="card">
@@ -106,18 +38,20 @@
                       >
                         <thead>
                           <tr>
-                            <th>Appointment ID</th>
+                            <th>Booked Employee</th>
                             <th>Customer Name</th>
                             <th>Services Selected</th>
+                            <th>Total Price</th>
                             <th>Updated At</th>
                             <th>Action</th>
                           </tr>
                         </thead>
                         <tfoot>
                           <tr>
-                            <th>Appointment ID</th>
+                            <th>Booked Employee</th>
                             <th>Customer Name</th>
                             <th>Services Selected</th>
+                            <th>Total Price</th>
                             <th>Updated At</th>
                             <th>Action</th>
                           </tr>
@@ -126,7 +60,7 @@
 
                           {% for appointment in appointments %}
                           <tr>
-                            <td>{{ appointment.id}} </td>
+                            <td>{{ appointment.employeeId.user_profile.get_full_name}} </td>
                             <td>{{ appointment.customerId.user_profile.get_full_name }}</td>
                             
                             <td>
@@ -136,6 +70,8 @@
                               <!-- this will lopp through the services offered by an employee -->
                             </td>
 
+                            <td> {{ appointment.total_price }}</td>
+
                             <td>{{ appointment.updatedAt }}</td>
                             
                             <td>
@@ -144,10 +80,9 @@
                                   type="button" class="btn btn-link btn-primary btn-lg"
                                   data-original-title="Edit Task"
                                   data-bs-toggle="modal" data-bs-target="#appointmentModal"
-                                  data-id="{{ appointment.id }}" data-customer="{{ appointment.customerId.user_profile.get_full_name }}"
-                                  data-employee="{{ appointment.employeeId.user_profile.get_full_name }}" data-day="{{ appointment.scheduleDay }}"
-                                  data-start="{{ appointment.appointmentTime }}" data-end="{{ appointment.appointmentEndTime }}"
-                                  data-status="{{ appointment.appointmentStatus }}" data-updated="{{ appointment.updatedAt }}"
+                                  data-employee="{{ appointment.employeeId.user_profile.get_full_name }}" data-customer="{{ appointment.customerId.user_profile.get_full_name }}"
+                                  data-day="{{ appointment.scheduleDay }}" data-start="{{ appointment.appointmentTime }}" data-end="{{ appointment.appointmentEndTime }}"
+                                  data-status="{{ appointment.appointmentStatus }}" data-price="{{ appointment.total_price }}" data-updated="{{ appointment.updatedAt }}"
                                   data-services="{% for service in appointment.services.all %}
                                   {{ service.service_name}}{% if not forloop.last %}, {% endif %}
                                   {% endfor %}"
@@ -193,10 +128,10 @@
                   <div class="modal-body">
                     <div class="row">
                       <div class="col-md-6">
-                        <p><strong>Appointment ID:</strong> <span id="modal-id"></span></p>
+                        <p><strong>Booked Employee:</strong> <span id="modal-employee"></span></p>
                         <p><strong>Customer:</strong> <span id="modal-customer"></span></p>
-                        <p><strong>Employee:</strong> <span id="modal-employee"></span></p>
                         <p><strong>Scheduled Day:</strong> <span id="modal-day"></span></p>
+                        <p><strong>Total Price:</strong><span id="modal-price"></span></p>
                       </div>
                       <div class="col-md-6">
                         <p><strong>Start Time:</strong> <span id="modal-start"></span></p>
@@ -226,10 +161,10 @@
       var appointmentModal = document.getElementById('appointmentModal');
       appointmentModal.addEventListener('show.bs.modal', function (event) {
         var button = event.relatedTarget; // this button will trigger the modal
-        var id = button.getAttribute('data-id');
-        var customer = button.getAttribute('data-customer');
         var employee = button.getAttribute('data-employee');
+        var customer = button.getAttribute('data-customer');
         var day = button.getAttribute('data-day');
+        var price = button.getAttribute('data-price');
         var start = button.getAttribute('data-start');
         var end = button.getAttribute('data-end');
         var status = button.getAttribute('data-status');
@@ -237,9 +172,8 @@
         var services = button.getAttribute('data-services');
 
         
-        document.getElementById('modal-id').textContent = id;
+        document.getElementById('modal-employee').textContent = id;
         document.getElementById('modal-customer').textContent = customer;
-        document.getElementById('modal-employee').textContent = employee;
         document.getElementById('modal-day').textContent = day;
         document.getElementById('modal-start').textContent = start;
         document.getElementById('modal-end').textContent = end;
