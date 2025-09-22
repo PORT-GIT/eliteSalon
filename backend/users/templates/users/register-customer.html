@@ -103,7 +103,7 @@
                   {% endif %}
                 </div>
 
-                <div class="col-md-6 form-group mt-3">
+                <div class="col-md-6 form-group mt-3" aria-placeholder="Enter email address">
                   {{ form.email.label_tag }}
 
                   {{ form.email }} 
@@ -142,7 +142,12 @@
                 <div class="col-md-6 form-group mt-3">
                   {{ form.password1.label_tag }}
 
-                  {{ form.password1 }}
+                  <div class="input-group">
+                    {{ form.password1 }}
+                    <button class="btn btn-outline-secondary" type="button" id="toggle-password1">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
 
                   {% if form.password1.errors %}
 
@@ -154,7 +159,12 @@
                 <div class="col-md-6 form-group mt-3">
                   {{ form.password2.label_tag }}
 
-                  {{ form.password2 }}
+                  <div class="input-group">
+                    {{ form.password2 }}
+                    <button class="btn btn-outline-secondary" type="button" id="toggle-password2">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
 
                   {% if form.password2.errors %}
 
@@ -258,4 +268,39 @@
   </div>
 
     
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const togglePassword1 = document.getElementById('toggle-password1');
+  const togglePassword2 = document.getElementById('toggle-password2');
+  const password1 = document.querySelector('input[name="password1"]');
+  const password2 = document.querySelector('input[name="password2"]');
+
+  togglePassword1.addEventListener('click', function() {
+    const icon = this.querySelector('i');
+    if (password1.type === 'password') {
+      password1.type = 'text';
+      icon.classList.remove('bi-eye');
+      icon.classList.add('bi-eye-slash');
+    } else {
+      password1.type = 'password';
+      icon.classList.remove('bi-eye-slash');
+      icon.classList.add('bi-eye');
+    }
+  });
+
+  togglePassword2.addEventListener('click', function() {
+    const icon = this.querySelector('i');
+    if (password2.type === 'password') {
+      password2.type = 'text';
+      icon.classList.remove('bi-eye');
+      icon.classList.add('bi-eye-slash');
+    } else {
+      password2.type = 'password';
+      icon.classList.remove('bi-eye-slash');
+      icon.classList.add('bi-eye');
+    }
+  });
+});
+</script>
+
 {% endblock %}

@@ -10,7 +10,7 @@
               <h3 class="fw-bold mb-3">Employee Information</h3>
               <ul class="breadcrumbs mb-3">
                 <li class="nav-home">
-                  <a href="{% url 'dashboard' %}">
+                  <a href="{% url 'admin_dashboard' %}">
                     <i class="icon-home"></i>
                   </a>
                 </li>
@@ -36,6 +36,7 @@
                       >
                         <thead>
                           <tr>
+                            <th>Employee ID</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone Number</th>
@@ -49,6 +50,7 @@
 
                         <tfoot>
                           <tr>
+                            <th>Employee ID</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone Number</th>
@@ -63,6 +65,7 @@
                         <tbody>
                           {% for employee in employees %}
                           <tr>
+                            <td>{{ employee.user_profile.id}}</td>
                             <td>{{ employee.user_profile.first_name }} {{ employee.user_profile.last_name }}</td>
                             <!-- this has kept both the last name and first name of the user in the same cell -->
                             <td>{{ employee.user_profile.email }}</td>
@@ -106,6 +109,7 @@
                       >
                         <thead>
                           <tr>
+                            <th>Employee ID</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone Number</th>
@@ -115,6 +119,7 @@
                         </thead>
                         <tfoot>
                           <tr>
+                            <th>Employee ID</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone Number</th>
@@ -126,6 +131,7 @@
 
                           {% for employee in employees %}
                           <tr>
+                            <td>{{ employee.user_profile.id}}</td>
                             <td>{{ employee.user_profile.first_name }} {{ employee.user_profile.last_name }}</td>
                             <!-- this has kept both the last name and first name of the user in the same cell -->
                             <td>{{ employee.user_profile.email }}</td>
@@ -272,7 +278,7 @@
         var employeeId = button.getAttribute('data-employee-id');
 
         //this sets the delete form action to the correct URL
-        deleteForm.action = "{% url 'delete_employee' 0 %}".replace('0', employeeId);
+        //i have delected a deleteForm action
       });
     });
     

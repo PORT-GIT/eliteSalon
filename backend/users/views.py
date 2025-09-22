@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
+from django.db.models import Count
 from .forms import EmployeeRegistrationForm, CustomerRegistrationForm
-from .models import EmployeeProfile
-# from .decorator import employee_required, customer_required, admin_required
+from .models import EmployeeProfile, CustomerProfile
+from salon.models import salonAppointment
 
 # this is a view for the homepage 
 def homepage(request):
@@ -14,11 +15,42 @@ def homepage(request):
 def employee_dashboard(request):
     return render(request, 'users/employee_dashboard.html')
 
-def customer_dashboard(request):
-    return render(request, 'users/customer_dashboard.html')
+
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def employee_profile(request):
+    user = request.user
+    try:
+        employee_profile = user.employee_profile
+        appointments = employee_profile.salonappointment_set.all()
+        appointments_count = appointments.count()  
+        # Count appointments for the employee who has logged in
+
+    except EmployeeProfile.DoesNotExist:
+        appointments = []
+        appointments_count = 0
+
+    return render(request, 'users/employee-profile.html', {
+        'appointments': appointments,
+        'appointments_count': appointments_count
+    })
 
 def admin_dashboard(request):
-    return render(request, 'users/dashboard.html')
+    employee_count = EmployeeProfile.objects.count()
+    customer_count = CustomerProfile.objects.count()
+    appointments_count = salonAppointment.objects.count()
+
+    # this will query the database and find out how many customers have more than one appointments
+    repeat_customers = CustomerProfile.objects.annotate(
+        appointments_count=Count('salonappointment')
+    ).filter(appointments_count__gt=1)
+    return render(request, 'users/dashboard.html',{
+        'employee_count':employee_count, 
+        'customer_count':customer_count,
+        'appointments_count': appointments_count,
+        'repeat_customers': repeat_customers,
+    })
 
 # @admin_required
 def delete_employee(request, pk):
@@ -64,10 +96,10 @@ def user_login(request):
                 login(request, user)
                 if user.is_superuser:
                     return redirect('admin_dashboard')
-                
+                elif hasattr(user, 'employee_profile'):
+                    return redirect('employee-profile')
                 else:
                     return redirect('homepage')
-                
             else:
                 form.add_error(None, "Invalid username or password")
     else:

@@ -42,6 +42,8 @@ class salonAppointment(models.Model):
     id = models.AutoField(primary_key=True)#this will enable the auto-increment factor
     customerId = models.ForeignKey('users.CustomerProfile', on_delete=models.CASCADE)
     services = models.ManyToManyField(service, related_name="salon_appointment")
+    total_price = models.IntegerField(null=True)
+    # this will allow me to call on the data stored in this field to be displayed in other templates
     employeeId = models.ForeignKey('users.EmployeeProfile', on_delete=models.CASCADE)
     scheduleDay = models.DateField()
     appointmentTime = models.TimeField(null=False, blank=False)

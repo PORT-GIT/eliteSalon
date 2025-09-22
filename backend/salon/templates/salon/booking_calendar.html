@@ -30,16 +30,25 @@
 
         <nav id="navmenu" class="navmenu">
           <ul>
+            {% if user.is_authenticated %}
+            
             <li><a href="{% url 'homepage' %}" class="active">Home<br></a></li>
 
             <li><a href="{% url 'services-list' %}">Services<br></a></li>
+            <li><a href="{% url 'user-logout' %}">Logout</a></li>
+            {% else %}
 
-            <li><a href="{% url 'booking-calendar' %}">Book Now</a></li>
+            <li><a href="{% url 'homepage' %}" class="active">Home<br></a></li>
 
-            <li><a href="{% url 'register-customer' %}">Register Customer</a></li>
+            <li><a href="{% url 'services-list' %}">Services<br></a></li>
+            <!-- there are two of these links because when a user logouts they cannot see the homepage and the services link
+             that is why these are here to avoid that -->
 
-           
+            <li><a href="{% url 'register-customer' %}">Sign Up</a></li>
+
             <li><a href="{% url 'login' %}">Login</a></li>
+            {% endif %}
+            <li><a href="{% url 'booking-calendar' %}">Book Now</a></li>
             
             <li><a href="{% url 'about-us' %}">About Us</a></li>
           </ul>

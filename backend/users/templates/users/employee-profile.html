@@ -1,0 +1,201 @@
+{% extends "reports_base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="page-inner">
+            <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+              <div>
+                {% if user.is_authenticated %}
+                <h3 class="fw-bold mb-3">Welcome to EliteChic Beauty Parlor, {{ user.get_full_name }}</h3>
+                 {% endif %}
+                <h6 class="op-7 mb-2"> Admin Dashboard</h6>
+              </div>
+              <div class="ms-md-auto py-2 py-md-0">
+                
+                <a href="{% url 'employee-register-wizard' %}" class="btn btn-primary btn-round">Update Profile</a>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-icon">
+                        <div
+                          class="icon-big text-center icon-primary bubble-shadow-small"
+                        >
+                          <i class="fas fa-users"></i>
+                        </div>
+                      </div>
+                      <div class="col col-stats ms-3 ms-sm-0">
+                        <div class="numbers">
+                          <p class="card-category">Appointments Booked</p>
+                          <h4 class="card-title">{{ appointments_count }}</h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-icon">
+                        <div
+                          class="icon-big text-center icon-info bubble-shadow-small"
+                        >
+                          <i class="fas fa-user-check"></i>
+                        </div>
+                      </div>
+                      <div class="col col-stats ms-3 ms-sm-0">
+                        <div class="numbers">
+                          <p class="card-category">Reviews Given</p>
+                          <h4 class="card-title">{{ customer_count }}</h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              
+              <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-icon">
+                        <div
+                          class="icon-big text-center icon-secondary bubble-shadow-small"
+                        >
+                          <i class="far fa-check-circle"></i>
+                        </div>
+                      </div>
+                      <div class="col col-stats ms-3 ms-sm-0">
+                        <div class="numbers">
+                          <p class="card-category">Appointments Cancelled</p>
+                          <h4 class="card-title">0</h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card card-round">
+                  <div class="card-body">
+
+                    <div class="card-head-row card-tools-still-right">
+                      <div class="card-title"> Appointments Made</div>
+                      <div class="card-tools">
+                        <div class="dropdown">
+                          <button class="btn btn-icon btn-clean me-0" type="button" id="dropdownMenuButton"
+                            data-bs-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                          >
+                            <i class="fas fa-ellipsis-h"></i>
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                            <a class="dropdown-item" href="">Sorting</a>
+                            
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="table-responsive">
+
+                      <div class="card-list py-10">
+
+                      <table class="display table ">
+                        <thead>
+                          <tr>
+                            <th>Customer Name</th>
+                            <th>Appointment Date</th>
+                            <th>Appointment Time</th>
+                            <th>Appointment End Time</th>
+                            <th>Services Selected</th>
+                            <th>Total Price</th>
+                            <th>Give Review</th>
+                            <th>Accept appointment</th>
+                            <th>Cancel appointment</th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          {% for appointment in appointments %}
+                            <tr>
+
+                              <td>{{ appointment.customerId.user_profile.get_full_name}}</td>
+                              <td>{{ appointment.scheduleDay }}</td>
+                              <td>{{ appointment.appointmentTime }}</td>
+                              <td>{{ appointment.appointmentEndTime }}</td>
+                              
+                              <td>
+                                {% for service in appointment.services.all %}
+                                {{ service.service_name }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                              </td>
+
+                              <td>
+                                {% with total=0 %}
+                                  {% for service in appointment.services.all %}
+                                    {% with total=total|add:service.price %}
+                                    {% endwith %}
+                                  {% endfor %}
+
+                                  {{ total }}
+                                {% endwith %}
+                              </td>
+
+                              <!-- this is the button to write a review  -->
+                              <td>
+                                <button class="btn btn-icon btn-link op-8 me-1">
+                                  <a href="{% url 'services-given-survey' %}">
+                                    <i class="far fa-edit"></i>
+                                  </a>
+                                </button>
+                              </td>
+
+                              <!-- this is the button to accept the appointment -->
+                              <td>
+                                <button class="btn btn-icon btn-link btn-success op-8">
+                                  <i class="fas fa-check"></i>
+                                </button>
+                              </td>
+
+                              <!-- this is the button to accept an appointment -->
+                              <td>
+                                <button class="btn btn-icon btn-link btn-danger op-8">
+                                  <i class="fas fa-times"></i>
+                                </button>
+                              </td>
+                            </tr>
+
+
+                          {% empty %}
+                          <p>You have no appointments booked yet.</p>
+
+                          {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    
+                  </div>
+                </div>
+              </div>
+
+              
+              
+            </div>
+</div>
+  
+
+{% endblock %}

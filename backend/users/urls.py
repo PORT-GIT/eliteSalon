@@ -15,8 +15,6 @@ urlpatterns = [
 
     path('login/', views.user_login, name='login'),
 
-    path('delete-employee/<int:pk>/', views.delete_employee, name='delete_employee'),
-
     path('user-logout/', views.user_logout, name='user-logout'),
 
     path('', views.homepage, name='homepage'),
@@ -25,9 +23,7 @@ urlpatterns = [
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
     # this is the URL to the admin dashboard
 
-    # path('redirect-after-login/', views.redirect_after_login, name='redirect-after-login' )
-
-    
+    path('employee-profile/', views.employee_profile, name='employee-profile'),
 ]
 
 

@@ -44,6 +44,21 @@ class AppointmentBookingForm(forms.ModelForm):
             'employeeId': forms.Select(attrs={'class': 'form-control'})
         }
 
+    def save(self, commit=True):
+        # this will calculate the total price of services before services
+        services = self.cleaned_data.get('services', [])
+        total_price = sum(service.price for service in services)
+
+        # this will create the appointment instance
+        appointment = super().save(commit=False)
+        appointment.total_price = total_price
+
+        if commit:
+            appointment.save()
+            self.save_m2m() #this will save the many to many relationships that i considered when selecting multiple services
+
+        return appointment
+
     def __init__(self, *args, **kwargs):
         self.customer = kwargs.pop('customer', None)
         super().__init__(*args, **kwargs)

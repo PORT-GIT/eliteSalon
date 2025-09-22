@@ -10,7 +10,7 @@
               <h3 class="fw-bold mb-3">Appointment Information</h3>
               <ul class="breadcrumbs mb-3">
                 <li class="nav-home">
-                  <a href="{% url 'dashboard' %}">
+                  <a href="{% url 'admin_dashboard' %}">
                     <i class="icon-home"></i>
                   </a>
                 </li>
@@ -57,7 +57,7 @@
                               {% for service in appointment.services.all %}
                                 {{ service.service_name}}{% if not forloop.last %}, {% endif %}
                               {% endfor %}
-                              <!-- this will lopp through the services offered by an employee -->
+                              <!-- this will loop through the services offered by an employee -->
                             </td>
 
                             <td>{{ appointment.employeeId.user_profile.get_full_name }}</td>

@@ -82,48 +82,21 @@ class EmployeeRegistrationForm(BaseProfileForm):
             raise forms.ValidationError("Passwords do not match!")
         return cleaned_data
 
-# class AdminRegistrationForm(BaseProfileForm):
-    
-#     class Meta:
-#         model = User
-#         fields = ['username'] + COMMON_FIELDS + ['password1', 'password2', 'services_to_offer']
-
-#     def save(self, commit = True):
-#         user = super().save(commit=False)#this saves the user if commit =True
-#         user.email = self.cleaned_data['email']
-#         user.first_name = self.cleaned_data['first_name']
-#         user.last_name = self.cleaned_data['last_name']
-#         user.is_staff = False
-#         user.is_superuser = False
-#         # this makes the customer not have access to the admin panel
-#         if commit:
-#             user.save()
-#         profile = EmployeeProfile.objects.create(
-#             user_profile=user,
-#             phone_number=self.cleaned_data['phone_number'],
-#             date_of_birth=self.cleaned_data['date_of_birth'],
-#         ) 
-#         profile.services_to_offer.set(self.cleaned_data['services_to_offer'])
-#         return user
-        
-#     def clean_email(self):
-#         email = self.cleaned_data.get('email')
-#         # because the email is a field in the USER model that is why I am relating it to the FK in the employeeprofile
-#         if EmployeeProfile.objects.filter(user_profile__email=email).exists():
-#             raise forms.ValidationError("This email already exists!")
-#         return email
-        
-#     def clean(self):
-#         cleaned_data = super().clean()
-#         if cleaned_data.get("password1") != cleaned_data.get("password2"):
-#             raise forms.ValidationError("Passwords do not match!")
-#         return cleaned_data
-
-
 
 class CustomerRegistrationForm(BaseProfileForm):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)#this is a method
+        # Define custom placeholders
+        placeholders = {
+            'username': 'Enter your username',
+            'first_name': 'Enter your first name',
+            'last_name': 'Enter your last name',
+            'email': 'Enter your email address',
+            'phone_number': 'Enter your phone number',
+            'date_of_birth': 'Select your date of birth',
+            'password1': 'Enter your password',
+            'password2': 'Confirm your password',
+        }
         # this will now add bootstrap classes to the field widgets
         for field_name, field in self.fields.items():
             if field.widget.attrs.get('class'):
@@ -131,8 +104,8 @@ class CustomerRegistrationForm(BaseProfileForm):
             else:
                 field.widget.attrs['class'] = 'form-control'
 
-            # this will add the placeholder to the field widgets
-            field.widget.attrs['placeholder'] = field.label
+            # this will add the custom placeholder to the field widgets
+            field.widget.attrs['placeholder'] = placeholders.get(field_name, field.label)
 
 
     class Meta:
@@ -175,7 +148,3 @@ class CustomerRegistrationForm(BaseProfileForm):
 
 class ContactUsForm(forms.ModelForm):
     pass
-    
-    
-
-    

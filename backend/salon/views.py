@@ -85,8 +85,9 @@ def book_appointment_ajax(request):
     """Handle appointment booking via AJAX"""
     if request.method == 'POST':
         # Parse form data from request
+        services_str = request.POST.get('services', '')
         data = {
-            'services': request.POST.getlist('services'),
+            'services': [sid.strip() for sid in services_str.split(',') if sid.strip()],
             'scheduleDay': request.POST.get('scheduleDay'),
             'appointmentTime': request.POST.get('appointmentTime'),
             'employeeId': request.POST.get('employeeId')
