@@ -32,7 +32,7 @@
           <ul>
             {% if user.is_authenticated %}
             
-            <li><a href="{% url 'homepage' %}" class="active">Home<br></a></li>
+            <li><a href="{% url 'homepage' %}">Home<br></a></li>
 
             <li><a href="{% url 'services-list' %}">Services<br></a></li>
             <li><a href="{% url 'user-logout' %}">Logout</a></li>
@@ -48,7 +48,7 @@
 
             <li><a href="{% url 'login' %}">Login</a></li>
             {% endif %}
-            <li><a href="{% url 'booking-calendar' %}">Book Now</a></li>
+            <li><a href="{% url 'booking-calendar' %}" class="active">Book Now</a></li>
             
             <li><a href="{% url 'about-us' %}">About Us</a></li>
           </ul>
@@ -62,9 +62,10 @@
   </header>
 
     <!-- Page Title -->
+    {% if user.is_authenticated %}
     <div class="page-title dark-background">
       <div class="container d-lg-flex justify-content-between align-items-center">
-        <h1 class="mb-2 mb-lg-0">Schedule An Appointment</h1>
+        <h1 class="mb-2 mb-lg-0">Welcome {{ user.get_full_name }}</h1>
         <nav class="breadcrumbs">
           <ol>
             <li><a href="{% url 'homepage' %}">Home</a></li>
@@ -73,6 +74,7 @@
         </nav>
       </div>
     </div><!-- End Page Title -->
+    {% endif %}
 
 
     <div class="container-fluid booking-calendar">
@@ -197,6 +199,75 @@
 
         </div>
     </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h4>History of Appointments</h4>
+            </div>
+
+            <div class="card-body">
+              <table class="display table">
+                <thead>
+                  <tr>
+                    <th>Appointment Date</th>
+                    <th>Appointment Time</th>
+                    <th>Appointment End Time</th>
+                    <th>Employee selected</th>
+                    <th>Services Selected</th>
+                    <th>Total Price</th>
+                    <th>Give Review</th>
+                    <th>Cancel appointment</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {% for appointment in appointments %}
+                    <tr>
+                      <td>{{ appointment.scheduleDay }}</td>
+                      <td>{{ appointment.appointmentTime }}</td>
+                      <td>{{ appointment.appointmentEndTime }}</td>
+                      <td>{{ appointment.employeeId.user_profile.get_full_name }}</td>
+                              
+                      <td>
+                        {% for service in appointment.services.all %}
+                        {{ service.service_name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                      </td>
+
+                      <td>{{ appointment.total_price }}</td>
+
+                      <!-- this is the button to write a review  -->
+                      <td>
+                        <button class="btn btn-icon btn-link op-8 me-1">
+                          <a href="{% url 'services-given-survey' %}">
+                            <i class="far fa-edit"></i>
+                          </a>
+                        </button>
+                      </td>
+
+                      <!-- this is the button to accept the appointment -->
+                      <td>
+                        <button class="btn btn-icon btn-link btn-success op-8">
+                          <i class="fas fa-times"></i>
+                        </button>
+                      </td>
+
+                    </tr>
+                    {% empty %}
+                    <p>You have no appointments booked yet.</p>
+
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     
 
     <footer id="footer" class="footer dark-background">

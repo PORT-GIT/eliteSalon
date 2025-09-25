@@ -6,17 +6,11 @@ from django.db.models import Count
 from .forms import EmployeeRegistrationForm, CustomerRegistrationForm
 from .models import EmployeeProfile, CustomerProfile
 from salon.models import salonAppointment
+from django.contrib.auth.decorators import login_required
 
 # this is a view for the homepage 
 def homepage(request):
     return render(request, 'users/home.html')
-
-
-def employee_dashboard(request):
-    return render(request, 'users/employee_dashboard.html')
-
-
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def employee_profile(request):
@@ -99,7 +93,7 @@ def user_login(request):
                 elif hasattr(user, 'employee_profile'):
                     return redirect('employee-profile')
                 else:
-                    return redirect('homepage')
+                    return redirect('booking-calendar')
             else:
                 form.add_error(None, "Invalid username or password")
     else:

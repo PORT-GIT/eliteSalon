@@ -70,10 +70,25 @@ def booking_calendar(request):
     employees = EmployeeProfile.objects.all()
     today = timezone.now().date()
 
+    # this will count and display the history of appointments of the logged in user
+    user=request.user
+    try:
+        customer_profile = user.customer_profile
+        appointments = customer_profile.salonappointment_set.all()
+        appointments_count = appointments.count()
+
+    except CustomerProfile.DoesNotExist:
+        appointments = []
+        appointments_count = 0
+        
+
     return render(request, 'salon/booking_calendar.html', {
         'services': services,
         'employees': employees,
         'today': timezone.now().date(),
+        'appointments': appointments, #this will assist in calling the appointments to the booking template so that it can
+         # be filtered to show as per the person who has logged in
+        'appointments_count': appointments_count
     })
 
     
@@ -296,3 +311,5 @@ def get_service_details(request):
             })
 
     return JsonResponse({'success': False, 'message': 'Invalid request'})
+
+

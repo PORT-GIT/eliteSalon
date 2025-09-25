@@ -1,4 +1,4 @@
-// this Javascript is to improve interactivity on the 
+// this Javascript is to improve interactivity on the
 // booking calendar page
 
 $(document).ready(function() {
@@ -9,68 +9,14 @@ $(document).ready(function() {
     let selectedEmployee = null;
     let serviceDetails = {};
 
-    // this function is to extract service details from the page
-    //this code block allows JS to quickly look into the data about services which can be used on the booking section of the system
-    // this makes calculcation faster and the UI loads smoothly
-    $('.service-checkbox').each(function() {
-            const serviceId = $(this).val();
-            const price = parseFloat($(this).data('price'));
-            const name = $(this).next('label').contents().first().text().trim().split(' - ')[0];
-            const durationStr = $(this).data('duration'); //this calls on the time data whichin in HH:MM:SS
-            const formatted = formatDuration(durationStr);
-            $(this).closest('.form-check').find('small').text(formatted);
+    // Initialize service details from the template data
+    initializeServiceDetails();
 
-            serviceDetails[serviceId] = {
-                name: name,
-                price: price,
-                duration: durationStr
-            };
-
-    });
-
-    function parseDuration(durationStr) {
-        const parts = durationStr.split(':');
-        const hours = parseInt(parts[0], 10) || 0;
-        const minutes = parseInt(parts[1], 10) || 0;
-        return hours * 60 + minutes;
-
+    function initializeServiceDetails() {
+        // This function will be populated when services are loaded via AJAX
+        serviceDetails = {};
     }
 
-    //this function will change the format in which the time is being displayed from HH:MM:SS to something like 1 hour 45 mins
-    function formatDuration(durationStr) {
-        //this will use the data that is  hh:mm:ss format like it is in the database and convert it to human readable time like 1 hour and 45 minutes
-        const parts = durationStr.split(':');
-        const hours = parseInt(parts[0], 10) || 0;
-        const minutes = parseInt(parts[1], 10) || 0;
-        let result = '';
-        if (hours > 0) result += `${hours} hour${hours > 1 ? 's' : ''}`;
-        //this means that when a hour number is more than 0 add the label of hour and if it is more than 1 hour add an (s) 
-        if (hours > 0  && minutes > 0) result += ' ';
-        if (minutes > 0) result += `${minutes} minute${minutes > 1 ? 's' : ''}`;
-        if (result === '') result = '0 minutes';
-        return result
-    }
-
-    function updateTotalDuration() {
-        let totalMinutes = 0;
-        $('.service-checkbox:checked').each(function() {
-            const duration = $(this).data('duration');
-            totalMinutes += parseDuration(duration);
-        });//this will sum the duration by converting time from hh:mm:ss to minutes
-
-        //this converts  the time from minutes back to HH:MM:SS
-        const hhmmss = minutesToHHMMSS(totalMinutes);
-        $('#total-duration').text(formatDuration(hhmmss));
-    }
-
-    // since I am changing the time format to be like {1 hour 45 minutes} in order to calculate the total service 
-    //time i will need to convert the time back to HH:MM:SS format for calculation and then will be converted back to human readable format after the calculation is complete
-    function minutesToHHMMSS(totalMinutes) {
-        const hours = Math.floor(totalMinutes / 60);
-        const minutes = totalMinutes % 60;
-        return`${hours}:${minutes < 10 ? '0' : ''}${minutes}:00`;
-    }
-    
     //this function is to enable service selection
     $('.service-checkbox').change(function() {
             selectedServices = [];
@@ -156,7 +102,7 @@ $(document).ready(function() {
                     } else {
                         $('#available-slots').html('<small class="text-danger">Error loading available slots</small>');
                         console.error('Error:',response.message);
-                    }  
+                    }
                 },
                 error: function(xhr, status, error) {
                     $('#available-slots').html('<small class="text-danger">Error loading availabe slots</small>')
@@ -326,7 +272,48 @@ $(document).ready(function() {
         return true;
     }
 
+    function parseDuration(durationStr) {
+        const parts = durationStr.split(':');
+        const hours = parseInt(parts[0], 10) || 0;
+        const minutes = parseInt(parts[1], 10) || 0;
+        return hours * 60 + minutes;
 
+    }
+
+    //this function will change the format in which the time is being displayed from HH:MM:SS to something like 1 hour 45 mins
+    function formatDuration(durationStr) {
+        //this will use the data that is  hh:mm:ss format like it is in the database and convert it to human readable time like 1 hour and 45 minutes
+        const parts = durationStr.split(':');
+        const hours = parseInt(parts[0], 10) || 0;
+        const minutes = parseInt(parts[1], 10) || 0;
+        let result = '';
+        if (hours > 0) result += `${hours} hour${hours > 1 ? 's' : ''}`;
+        //this means that when a hour number is more than 0 add the label of hour and if it is more than 1 hour add an (s)
+        if (hours > 0  && minutes > 0) result += ' ';
+        if (minutes > 0) result += `${minutes} minute${minutes > 1 ? 's' : ''}`;
+        if (result === '') result = '0 minutes';
+        return result
+    }
+
+    function updateTotalDuration() {
+        let totalMinutes = 0;
+        $('.service-checkbox:checked').each(function() {
+            const duration = $(this).data('duration');
+            totalMinutes += parseDuration(duration);
+        });//this will sum the duration by converting time from hh:mm:ss to minutes
+
+        //this converts  the time from minutes back to HH:MM:SS
+        const hhmmss = minutesToHHMMSS(totalMinutes);
+        $('#total-duration').text(formatDuration(hhmmss));
+    }
+
+    // since I am changing the time format to be like {1 hour 45 minutes} in order to calculate the total service
+    //time i will need to convert the time back to HH:MM:SS format for calculation and then will be converted back to human readable format after the calculation is complete
+    function minutesToHHMMSS(totalMinutes) {
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        return`${hours}:${minutes < 10 ? '0' : ''}${minutes}:00`;
+    }
 
     });
 
@@ -362,7 +349,7 @@ $(document).ready(function() {
             $('#loading-spinner').addClass('d-none');
         }
     }
-        
+
     //this will show success message after booking
     function showSuccessMessage(message) {
         const alert = $(`
@@ -379,10 +366,4 @@ $(document).ready(function() {
         setTimeout(function() {
             alert.alert('close');
         }, 3000);
-    }    
-
-
-
-
-
-        
+    }
