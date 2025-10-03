@@ -58,11 +58,11 @@ class salonAppointment(models.Model):
 
 class servicesGiven(models.Model):
     RATINGS = (
-    ('1','1'),
-    ('2', '2'),
-    ('3', '3'),
-    ('4', '4'),
-    ('5', '5'),
+    (1,'1'),
+    (2, '2'),
+    (3, '3'),
+    (4, '4'),
+    (5, '5'),
     )
     # change selection from string
     id = models.AutoField(primary_key=True)#this will enable the auto-increment factor
@@ -70,10 +70,13 @@ class servicesGiven(models.Model):
     servicesId = models.ForeignKey(service, to_field='id', on_delete=models.CASCADE)
     customerId = models.ForeignKey(CustomerProfile,  on_delete=models.CASCADE, to_field='id')
     employeeId = models.ForeignKey(EmployeeProfile,  on_delete=models.CASCADE, to_field='id')
-    customerRating = models.IntegerField(choices=RATINGS)
-    customerComment = models.TextField(null=False, max_length=200)
-    employeeRating = models.IntegerField(choices=RATINGS)
-    employeeComment = models.TextField(null=False, max_length=200)
+    customerRating = models.IntegerField(choices=RATINGS, null=True, blank=True)
+    customerComment = models.TextField(null=True, blank=True, max_length=200)
+    employeeRating = models.IntegerField(choices=RATINGS, null=True, blank=True)
+    employeeComment = models.TextField(null=True, blank=True, max_length=200)
 
     def __str__(self):
-        return self.salonAppointmentId
+        if self.salonAppointmentId:
+            return f"Review for {str(self.salonAppointmentId)}"
+        else:
+            return f"Review by {str(self.customerId)}"

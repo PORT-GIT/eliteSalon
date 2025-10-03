@@ -26,7 +26,7 @@ def services_given_survey(request, appointment_id=None):
     from django.contrib import messages
 
     if request.method == 'POST':
-        form = ServicesGivenForm(request.POST)
+        form = ServicesGivenForm(request.POST, user=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, 'Thank you for your feedback!')
@@ -35,6 +35,8 @@ def services_given_survey(request, appointment_id=None):
             messages.error(request, 'Please correct the errors below.')
     else:
         initial_data = {}
+
+        # If appointment_id is provided, use it
         if appointment_id:
             try:
                 appointment = salonAppointment.objects.get(id=appointment_id)
@@ -48,7 +50,47 @@ def services_given_survey(request, appointment_id=None):
             except salonAppointment.DoesNotExist:
                 messages.error(request, 'Appointment not found.')
                 return redirect('services-given-survey')
-        form = ServicesGivenForm(initial=initial_data)
+        else:
+            # Auto-fill based on user's most recent appointment
+            if hasattr(request.user, 'customer_profile'):
+                # For customers, get their most recent appointment
+                try:
+                    recent_appointment = salonAppointment.objects.filter(
+                        customerId=request.user.customer_profile
+                    ).order_by('-createdAt').first()
+
+                    if recent_appointment:
+                        initial_data = {
+                            'salonAppointmentId': recent_appointment,
+                            'customerId': recent_appointment.customerId,
+                            'employeeId': recent_appointment.employeeId,
+                            'servicesId': recent_appointment.services.first() if recent_appointment.services.exists() else None
+                        }
+                    else:
+                        messages.warning(request, 'No appointments found. Please contact support if you believe this is an error.')
+                except Exception as e:
+                    messages.error(request, 'Error loading your appointment data.')
+
+            elif hasattr(request.user, 'employee_profile'):
+                # For employees, get the most recent appointment they were involved in
+                try:
+                    recent_appointment = salonAppointment.objects.filter(
+                        employeeId=request.user.employee_profile
+                    ).order_by('-createdAt').first()
+
+                    if recent_appointment:
+                        initial_data = {
+                            'salonAppointmentId': recent_appointment,
+                            'customerId': recent_appointment.customerId,
+                            'employeeId': recent_appointment.employeeId,
+                            'servicesId': recent_appointment.services.first() if recent_appointment.services.exists() else None
+                        }
+                    else:
+                        messages.warning(request, 'No appointments found. Please contact support if you believe this is an error.')
+                except Exception as e:
+                    messages.error(request, 'Error loading your appointment data.')
+
+        form = ServicesGivenForm(initial=initial_data, user=request.user)
 
     context = {
         'form': form,
@@ -68,27 +110,13 @@ def booking_calendar(request):
     """Display the interactive booking calendar"""
     services = service.objects.all()
     employees = EmployeeProfile.objects.all()
-    today = timezone.now().date()
-
-    # this will count and display the history of appointments of the logged in user
-    user=request.user
-    try:
-        customer_profile = user.customer_profile
-        appointments = customer_profile.salonappointment_set.all()
-        appointments_count = appointments.count()
-
-    except CustomerProfile.DoesNotExist:
-        appointments = []
-        appointments_count = 0
-        
+    today = timezone.now().date()    
 
     return render(request, 'salon/booking_calendar.html', {
         'services': services,
         'employees': employees,
         'today': timezone.now().date(),
-        'appointments': appointments, #this will assist in calling the appointments to the booking template so that it can
-         # be filtered to show as per the person who has logged in
-        'appointments_count': appointments_count
+        
     })
 
     

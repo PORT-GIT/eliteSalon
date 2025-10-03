@@ -24,6 +24,8 @@ urlpatterns = [
     # this is the URL to the admin dashboard
 
     path('employee-profile/', views.employee_profile, name='employee-profile'),
+
+    path('logged-customer/', views.logged_customer, name='logged-customer'),
 ]
 
 

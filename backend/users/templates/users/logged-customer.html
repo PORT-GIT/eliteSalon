@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+    <body class="contact-page">
+
+  <header id="header" class="header sticky-top">
+
+    <div class="topbar d-flex align-items-center light-background">
+      <div class="container d-flex justify-content-center justify-content-md-between">
+        <div class="contact-info d-flex align-items-center">
+          <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:contact@example.com">contact@example.com</a></i>
+          <i class="bi bi-phone d-flex align-items-center ms-4"><span>+1 5589 55488 55</span></i>
+        </div>
+        <div class="social-links d-none d-md-flex align-items-center">
+          <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+        </div>
+      </div>
+    </div><!-- End Top Bar -->
+
+    <div class="branding d-flex align-items-cente">
+
+      <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="{% url 'homepage' %}" class="logo d-flex align-items-center">
+          <!-- Uncomment the line below if you also wish to use an image logo -->
+          <!-- <img src="assets/img/logo.png" alt=""> -->
+          <h1 class="sitename">EliteChic</h1>
+        </a>
+
+        
+      </div>
+
+    </div>
+
+  </header>
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title dark-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Contact</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="{% url 'homepage' %}">Home</a></li>
+            <li class="current">Customer Registration</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact section">
+
+      <div class="container">
+
+        <div class="row gy-5 gx-lg-5">
+
+          <div class="col-lg-12 justify-content-lg-between">
+            <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h4>History of Appointments</h4>
+            </div>
+
+            <div class="card-body">
+              <table class="display table">
+                <thead>
+                  <tr>
+                    <th>Appointment Date</th>
+                    <th>Appointment Time</th>
+                    <th>Appointment End Time</th>
+                    <th>Employee selected</th>
+                    <th>Services Selected</th>
+                    <th>Total Price</th>
+                    <th>Give Review</th>
+                    <th>Cancel appointment</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {% for appointment in appointments %}
+                    <tr>
+                      <td>{{ appointment.scheduleDay }}</td>
+                      <td>{{ appointment.appointmentTime }}</td>
+                      <td>{{ appointment.appointmentEndTime }}</td>
+                      <td>{{ appointment.employeeId.user_profile.get_full_name }}</td>
+                              
+                      <td>
+                        {% for service in appointment.services.all %}
+                        {{ service.service_name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                      </td>
+
+                      <td>{{ appointment.total_price }}</td>
+
+                      <!-- this is the button to write a review  -->
+                      <td>
+                        <button class="btn btn-icon btn-link op-8 me-1">
+                          <a href="{% url 'services-given-survey' %}">
+                            <i class="far fa-edit"></i>
+                          </a>
+                        </button>
+                      </td>
+
+                      <!-- this is the button to accept the appointment -->
+                      <td>
+                        <button class="btn btn-icon btn-link btn-success op-8">
+                          <i class="fas fa-times"></i>
+                        </button>
+                      </td>
+
+                    </tr>
+                    {% empty %}
+                    <p>You have no appointments booked yet.</p>
+
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+          </div><!-- End Contact Form -->
+
+        </div>
+
+      </div>
+
+    </section><!-- /Contact Section -->
+
+  </main>
+
+  <footer id="footer" class="footer dark-background">
+
+    <div class="footer-top">
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-lg-4 col-md-6 footer-about">
+            <a href="home.html" class="logo d-flex align-items-center">
+              <span class="sitename">EliteChic</span>
+            </a>
+            <div class="footer-contact pt-3">
+              <p>Kihunguro, Ruiru</p>
+              <p class="mt-3"><strong>Phone:</strong> <span>+254 789 678 111</span></p>
+              <p><strong>Email:</strong> <span>elitechic@gmail.com</span></p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 footer-links">
+            <h4>Useful Links</h4>
+            <ul>
+              <li><a href="{% url 'homepage' %}">Home</a></li>
+                <li><a href="{% url 'services-list' %}">Services</a></li>
+                <li><a href="{% url 'about-us' %}">About us</a></li>
+            </ul>
+          </div>
+
+
+          <div class="col-lg-4 footer-links newsletter">
+            <h4>Subscribe to Our Newsletter</h4>
+            <form action="post" class="subscribe">
+              {% csrf_token %}
+              <input type="email" class="subscribe-form" placeholder="Enter your email address">
+              <button class="btn-subscirbe mt-4" type="submit">Subscribe</button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="copyright text-center">
+      <div class="container d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
+
+        <div class="d-flex flex-column align-items-center align-items-lg-start">
+          <div>
+            © Copyright <strong><span>MK</span></strong>. All Rights Reserved
+          </div>
+          <div class="credits">
+            <!-- All the links in the footer should remain intact. -->
+            <!-- You can delete the links only if you purchased the pro version. -->
+            <!-- Licensing information: https://bootstrapmade.com/license/ -->
+            <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/herobiz-bootstrap-business-template/ -->
+            Used by MK
+          </div>
+        </div>
+
+        <div class="social-links order-first order-lg-last mb-3 mb-lg-0">
+          <a href=""><i class="bi bi-twitter-x"></i></a>
+          <a href=""><i class="bi bi-facebook"></i></a>
+          <a href=""><i class="bi bi-instagram"></i></a>
+          <a href=""><i class="bi bi-linkedin"></i></a>
+        </div>
+
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+    
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const togglePassword1 = document.getElementById('toggle-password1');
+  const togglePassword2 = document.getElementById('toggle-password2');
+  const password1 = document.querySelector('input[name="password1"]');
+  const password2 = document.querySelector('input[name="password2"]');
+
+  togglePassword1.addEventListener('click', function() {
+    const icon = this.querySelector('i');
+    if (password1.type === 'password') {
+      password1.type = 'text';
+      icon.classList.remove('bi-eye');
+      icon.classList.add('bi-eye-slash');
+    } else {
+      password1.type = 'password';
+      icon.classList.remove('bi-eye-slash');
+      icon.classList.add('bi-eye');
+    }
+  });
+
+  togglePassword2.addEventListener('click', function() {
+    const icon = this.querySelector('i');
+    if (password2.type === 'password') {
+      password2.type = 'text';
+      icon.classList.remove('bi-eye');
+      icon.classList.add('bi-eye-slash');
+    } else {
+      password2.type = 'password';
+      icon.classList.remove('bi-eye-slash');
+      icon.classList.add('bi-eye');
+    }
+  });
+});
+</script>
+
+{% endblock %}
+

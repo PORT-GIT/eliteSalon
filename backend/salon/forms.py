@@ -113,3 +113,27 @@ class ServicesGivenForm(forms.ModelForm):
             'employeeRating': forms.Select(attrs={'class': 'form-control'}),
             'employeeComment': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
         }
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+        # Make fields optional based on user type
+        if self.user:
+            is_customer = hasattr(self.user, 'customer_profile')
+            is_employee = hasattr(self.user, 'employee_profile')
+
+            if is_customer:
+                # Customer only needs to fill customer fields
+                self.fields['employeeRating'].required = False
+                self.fields['employeeComment'].required = False
+            elif is_employee:
+                # Employee only needs to fill employee fields
+                self.fields['customerRating'].required = False
+                self.fields['customerComment'].required = False
+            else:
+                # Admin or other user types - make all optional or handle differently
+                self.fields['customerRating'].required = False
+                self.fields['customerComment'].required = False
+                self.fields['employeeRating'].required = False
+                self.fields['employeeComment'].required = False
