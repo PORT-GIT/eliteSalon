@@ -409,10 +409,23 @@
   background-color: var(--surface-color);
 }
 
+.login-section {
+  padding: 30px 0px;
+}
+
 .login-container form {
-  padding: 20px;
+  padding: 50px 0px;
   text-align: center;
   justify-content: center;
+}
+
+.show-text {
+  font-size: 0.9em;
+  color: #4d4643;
+}
+
+.input-password {
+  margin-top: 15px;
 }
 
 .directclient {
@@ -477,7 +490,9 @@
 
 /*--------------------------------------------------------------
 # Subscribe Footer Template Section
---------------------------------------------------------------*//*--------------------------------------------------------------
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
 # Dropdown Menu Section
 --------------------------------------------------------------*/
 .dropdown-menu {
