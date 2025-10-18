@@ -10,9 +10,7 @@ urlpatterns = [
 
     path('appointment-list/', views.appointment_list, name='appointment_list'),
 
-    # path('appointments/<int:pk>/', views.AppointmentDetailView.as_view(), name='appointment-detail'),
-
-    # path('appointments/<int:pk>/delete', views.AppointmentDeleteView.as_view(), name='delete-appointment'),
+    path('surveys-list/', views.surveys_list, name="surveys-list"),
 
     path('services-report/', views.services_report, name='service_report'),
 

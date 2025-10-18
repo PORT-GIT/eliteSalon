@@ -15,6 +15,17 @@ $(document).ready(function() {
     function initializeServiceDetails() {
         // This function will be populated when services are loaded via AJAX
         serviceDetails = {};
+
+        // Populate serviceDetails from the template data
+        $('.service-checkbox').each(function() {
+            const $this = $(this);
+            const id = $this.val();
+            serviceDetails[id] = {
+                name: $this.data('name'),
+                price: parseFloat($this.data('price')),
+                duration: $this.data('duration')
+            };
+        });
     }
 
     //this function is to enable service selection

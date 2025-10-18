@@ -27,17 +27,8 @@ def appointment_list(request):
         
     return render(request, 'reports/list_of_appointments.html', {'appointments': appointments})
 
-# def appointment_report(request):
-#     appointments = salonAppointment.objects.all()
-    
-#     # Add simple filters
-#     status = request.GET.get('status')
-#     if status:
-#         appointments = appointments.filter(appointmentStatus=status)
-    
-#     return render(request, 'reports/appointment_reports.html', {
-#         'appointments': appointments
-#     })
+def surveys_list(request):
+    return render(request, 'reports/list_of_surveys.html')
 
 def services_report(request):
     services_data = service.objects.annotate(

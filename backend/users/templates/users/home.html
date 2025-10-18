@@ -39,8 +39,6 @@
 
             <li><a href="{% url 'services-list' %}">Services<br></a></li>
 
-            <li><a href="{% url 'about-us' %}">About Us</a></li>
-
             {% else %}
 
             <li><a href="{% url 'homepage' %}" class="active">Home<br></a></li>
@@ -48,6 +46,8 @@
             <li><a href="{% url 'services-list' %}">Services<br></a></li>
             <!-- there are two of these links because when a user logouts they cannot see the homepage and the services link
              that is why these are here to avoid that -->
+             
+            <li><a href="{% url 'about-us' %}">About Us</a></li>
 
             <li><a href="{% url 'register-customer' %}">Sign Up</a></li>
 
@@ -85,52 +85,23 @@
   <main class="main">
 
     <!-- Hero Section -->
-    <section id="hero" class="hero section dark-background">
+    <section class="home">
 
-      <div id="hero-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+      <div class="hero">
 
-        <div class="carousel-item active">
+        <img src="{% static 'assets/img/hero-carousel/hero-carousel-2.jpg' %}" alt="">
 
-          <img src="{% static 'assets/img/hero-carousel/hero-carousel-1.jpg' %}" alt="">
-          <div class="home">
-            <div class="container">
-              <h1>Discover Beauty at Our Elite Salon</h1>
-              <p>Feel relaxed, revitalized and beautiful in our elite salon</p>
-              <a href="{% url 'booking-calendar' %}" class="btn-get-started">Book an Appointment Now</a>
-            </div>
-          </div>
-                    
-        </div><!-- End Carousel Item -->
+        <div class="home-item">
 
-        <div class="carousel-item">
-          <img src="{% static 'assets/img/hero-carousel/hero-carousel-2.jpg' %}" alt="">
-          <div class="home">
-            <div class="container">
-              <h1>Discover Beauty at Our Elite Salon</h1>
-              <p>Feel relaxed, revitalized and beautiful in our elite salon</p>
-              <a href="{% url 'booking-calendar' %}" class="btn-get-started">Book an Appointment Now</a>
-          </div>
-        </div>
-
-        <div class="carousel-item">
-          <img src="{% static 'assets/img/hero-carousel/hero-carousel-3.jpg' %}" alt="">
-          <div class="home">
-            <div class="container">
+          <div class="container">
+            
             <h1>Discover Beauty at Our Elite Salon</h1>
             <p>Feel relaxed, revitalized and beautiful in our elite salon</p>
             <a href="{% url 'booking-calendar' %}" class="btn-get-started">Book an Appointment Now</a>
-          </div> 
+
+          </div>
+
         </div>
-
-        <a class="carousel-control-prev" href="#hero-carousel" role="button" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
-        </a>
-
-        <a class="carousel-control-next" href="#hero-carousel" role="button" data-bs-slide="next">
-          <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
-        </a>
-
-        <ol class="carousel-indicators"></ol>
 
       </div>
 
@@ -164,7 +135,7 @@
             
       </div>
 
-    </section><!-- /Call To Action Section -->
+    </section><!-- Immerse Yourself Section -->
 
     <!-- Services Section -->
     <section id="services" class="services section">
@@ -175,7 +146,7 @@
           <p>Have a look at what we offer</p>
       </div><!-- End Section Title -->
 
-      <div class="container">
+      <div class="container services-container">
 
         <div class="row gy-4">
 
@@ -228,16 +199,18 @@
                 </div>
             </div><!-- End Service Item -->
 
+            {% if user.is_authenticated %}
+
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
                 <div class="service-item position-relative">
                 <div class="icon">
                     <i class="bi bi-calendar4-week"></i>
                 </div>
-                <a href="#" class="stretched-link">
+                <a href="{% url 'booking-calendar'%}" class="stretched-link">
                     <h3>Book An Appointment</h3>
                 </a>
                 <p>Book with us now! You will not be disappointed. Check our website, register/login and book an appointment with us.</p>
-                <a href="#" class="stretched-link"></a>
+                <a href="{% url 'booking-calendar'%}" class="stretched-link"></a>
                 </div>
             </div><!-- End Service Item -->
 
@@ -246,13 +219,45 @@
                 <div class="icon">
                     <i class="bi bi-hand-thumbs-up-fill"></i>
                 </div>
-                <a href="#" class="stretched-link">
+                <a href="{% url 'logged-customer' %}" class="stretched-link">
                     <h3>Feedback</h3>
                 </a>
                 <p>We encourage our clients to reach out to us for any inquiries or complaints in order to provide better services.</p>
-                <a href="#" class="stretched-link"></a>
+                <a href="{% url 'logged-customer' %}" class="stretched-link"></a>
                 </div>
             </div><!-- End Service Item -->
+
+            {% else %}
+
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                <div class="service-item position-relative">
+                <div class="icon">
+                    <i class="bi bi-calendar4-week"></i>
+                </div>
+                <a href="{% url 'login' %}" class="stretched-link">
+                    <h3>Book An Appointment</h3>
+                </a>
+                <p>Book with us now! You will not be disappointed. Check our website, register/login and book an appointment with us.</p>
+                <a href="{% url 'login' %}" class="stretched-link"></a>
+                </div>
+            </div><!-- End Service Item -->
+
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
+                <div class="service-item position-relative">
+                <div class="icon">
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                </div>
+                <a href="{% url 'login' %}" class="stretched-link">
+                    <h3>Feedback</h3>
+                </a>
+                <p>We encourage our clients to reach out to us for any inquiries or complaints in order to provide better services.</p>
+                <a href="{% url 'login' %}" class="stretched-link"></a>
+                </div>
+            </div><!-- End Service Item -->
+
+            {% endif %}
+
+            
 
         </div>
 
@@ -263,23 +268,26 @@
     <!-- Portfolio Section -->
     <section id="portfolio" class="portfolio section">
 
-      <div class="container">
+      <div class=" portfolio-container">
 
         <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
 
           <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
-                <li data-filter="*" class="filter-active">All</li>
-                <li data-filter=".filter-braiding">Braiding</li>
-                <li data-filter=".filter-nail-care">Nail Care</li>
-                <li data-filter=".filter-facial">Facial</li>
-                <li data-filter=".filter-make-up">Make-up</li>
+
+            <li data-filter="*" class="filter-active">All</li>
+            <li data-filter=".filter-braiding">Braiding</li>
+            <li data-filter=".filter-nail-care">Nail Care</li>              
+            <li data-filter=".filter-facial">Facial</li>
+            <li data-filter=".filter-make-up">Make-up</li>
+            <li data-filter=".filter-make-up">Haircuts</li>
+
           </ul><!-- End Portfolio Filters -->
 
           <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
 
 
               <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-nail-care">
-                    <img src="{% static 'assets/img/services/nail-care/nailcare-3.jpg' %}" class="img-fluid" alt="">
+                <img src="{% static 'assets/img/services/nail-care/nailcare-3.jpg' %}" class="img-fluid" alt="">
                     
               </div><!-- End Portfolio Item -->
 

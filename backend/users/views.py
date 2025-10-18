@@ -5,7 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.db.models import Count
 from .forms import EmployeeRegistrationForm, CustomerRegistrationForm
 from .models import EmployeeProfile, CustomerProfile
-from salon.models import salonAppointment
+from salon.models import salonAppointment,servicesGiven
 from django.contrib.auth.decorators import login_required
 
 # this is a view for the homepage 
@@ -14,16 +14,19 @@ def homepage(request):
 
 @login_required
 def logged_customer(request):
+
     # this will count and display the history of appointments of the logged in user
     user=request.user
     try:
         customer_profile = user.customer_profile
         appointments = customer_profile.salonappointment_set.all()
         appointments_count = appointments.count()
+        
 
     except CustomerProfile.DoesNotExist:
         appointments = []
         appointments_count = 0
+
     return render(request, 'users/logged-customer.html', {
         'appointments': appointments, #this will assist in calling the appointments to the booking template so that it can
          # be filtered to show as per the person who has logged in
@@ -38,30 +41,39 @@ def employee_profile(request):
         appointments = employee_profile.salonappointment_set.all()
         appointments_count = appointments.count()  
         # Count appointments for the employee who has logged in
+        reviews = employee_profile.servicesgiven_set.all()
+        reviews_count = reviews.count()
 
     except EmployeeProfile.DoesNotExist:
         appointments = []
         appointments_count = 0
+        reviews = []
+        reviews_count = 0
 
     return render(request, 'users/employee-profile.html', {
         'appointments': appointments,
-        'appointments_count': appointments_count
+        'appointments_count': appointments_count,
+        'reviews_count' : reviews_count
     })
 
 def admin_dashboard(request):
     employee_count = EmployeeProfile.objects.count()
     customer_count = CustomerProfile.objects.count()
     appointments_count = salonAppointment.objects.count()
+    reviews_count = servicesGiven.objects.count()
+    appointments = salonAppointment.objects.order_by('-scheduleDay')
 
     # this will query the database and find out how many customers have more than one appointments
     repeat_customers = CustomerProfile.objects.annotate(
         appointments_count=Count('salonappointment')
     ).filter(appointments_count__gt=1)
     return render(request, 'users/dashboard.html',{
-        'employee_count':employee_count, 
+        'employee_count':employee_count,
         'customer_count':customer_count,
         'appointments_count': appointments_count,
+        'appointments': appointments,
         'repeat_customers': repeat_customers,
+        'reviews_count': reviews_count
     })
 
 # @admin_required

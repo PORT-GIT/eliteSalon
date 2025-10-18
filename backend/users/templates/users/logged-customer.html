@@ -2,6 +2,8 @@
 
 {% load static %}
 
+<!-- THIS IS THE TEMPLATE THAT IS LIKE THE CUSTOMER PROFILE -->
+
 {% block content %}
     <body class="contact-page">
 
@@ -10,8 +12,8 @@
     <div class="topbar d-flex align-items-center light-background">
       <div class="container d-flex justify-content-center justify-content-md-between">
         <div class="contact-info d-flex align-items-center">
-          <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:contact@example.com">contact@example.com</a></i>
-          <i class="bi bi-phone d-flex align-items-center ms-4"><span>+1 5589 55488 55</span></i>
+          <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:contact@example.com">elitechic@gmail.com</a></i>
+          <i class="bi bi-phone d-flex align-items-center ms-4"><span>+254 789 678 111</span></i>
         </div>
         <div class="social-links d-none d-md-flex align-items-center">
           <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
@@ -41,20 +43,22 @@
   <main class="main">
 
     <!-- Page Title -->
+    {% if user.is_authenticated %}
     <div class="page-title dark-background">
       <div class="container d-lg-flex justify-content-between align-items-center">
-        <h1 class="mb-2 mb-lg-0">Contact</h1>
+        <h1 class="mb-2 mb-lg-0">Welcome {{ user.get_full_name }}</h1>
         <nav class="breadcrumbs">
           <ol>
             <li><a href="{% url 'homepage' %}">Home</a></li>
-            <li class="current">Customer Registration</li>
+            <li class="current">Customer Profile</li>
           </ol>
         </nav>
       </div>
     </div><!-- End Page Title -->
+    {% endif %}
 
     <!-- Contact Section -->
-    <section id="contact" class="contact section">
+    <section id="customer-profile" class="customer-profile section">
 
       <div class="container">
 
@@ -124,17 +128,26 @@
                 </tbody>
               </table>
             </div>
+
+            
+
           </div>
         </div>
       </div>
     </div>
-          </div><!-- End Contact Form -->
 
-        </div>
+    <div class="customer-profile">
+      <a href="{% url 'booking-calendar' %}">
 
-      </div>
+        <button class="btn-customer">
+          Book another appointment
+        </button>
+      </a>
+      
+    </div>
+    </section>
 
-    </section><!-- /Contact Section -->
+    
 
   </main>
 

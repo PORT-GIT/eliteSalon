@@ -61,12 +61,12 @@
   }
 
 /*--------------------------------------------------------------
-# Hero Section
+# Home Section
 --------------------------------------------------------------*/
 
-.hero .carousel {
+.home .hero {
   width: 100%;
-  min-height: 70vh;
+  min-height: 90vh;
   padding: 0;
   margin: 0;
   position: relative;
@@ -74,58 +74,60 @@
 
 @media (max-height: 500px),
 (max-width: 580px) {
-  .hero .carousel {
-    min-height: 80vh;
+  .home .hero {
+    min-height: 70vh;
     /* this reduces the height of the image when on a smaller screen */
   }
 }
 
-.hero img {
+.home img {
   position: absolute;
   inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 1;
+  z-index: 3;
 }
-.carousel-item .home h1 {
+
+.home-item .container h1 {
   margin-bottom: 20px;
   font-size: 70px;
   font-weight: 700;
 }
 
-.carousel-item .container {
+.home-item .container {
   position: relative;
   text-align: center;
-  background: color-mix(in srgb, var(--background-color), transparent 40%);
+  background: color-mix(in srgb, var(--background-color), transparent 50%);
   padding-top: 50px;
-  padding-bottom: 50px;
+  padding-bottom: 100px;
   margin-bottom: 50px;
-  border-top: 4px solid var(--accent-color);
+  border-top: 5px solid var(--accent-color);
   z-index: 3;
 }
 
 @media (max-width: 768px) {
-    .carousel-item .home {
+    .home-item .container {
         margin-right: 100px;
     }
 
-  .carousel-item .home h1 {
+  .home-item .container h1 {
     font-size: 30px;
     text-align: center;
   }
 
-  .carousel-item .home p {
+  .home-item .container p {
     text-align: center;
+
   }
 
-  .carousel-item .btn-get-started {
+  .home-item .btn-get-started {
     text-align: center;
   }
 }
 
-.hero .btn-get-started {
+.home-item .btn-get-started {
   font-weight: 500;
   font-size: 16px;
   letter-spacing: 1px;
@@ -134,11 +136,11 @@
   transition: 0.5s;
   margin: 10px;
   border-radius: 20px;
-  color: var(--contrast-color);
+  color: var(--heading-color);
   border: 2px solid var(--accent-color);
 }
 
-.hero .btn-get-started:hover {
+.home .btn-get-started:hover {
   background: var(--accent-color);
 }
 
@@ -207,6 +209,30 @@
 # Immerse Yourself Section
 --------------------------------------------------------------*/
 
+/*--------------------------------------------------------------
+# Services Section
+--------------------------------------------------------------*/
+
+.services-container {
+  padding-bottom: 50px;
+}
+
+
+/*--------------------------------------------------------------
+# Services Section
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# Portfolio Section
+--------------------------------------------------------------*/
+
+.portfolio-container {
+  padding-bottom: 50px;
+}
+
+/*--------------------------------------------------------------
+# Portfolio Section
+--------------------------------------------------------------*/
 
 /*--------------------------------------------------------------
 # Homepage End Section
@@ -464,4 +490,302 @@
 
 /*--------------------------------------------------------------
 # Dropdown Menu Section
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# Customer Profile Template
+--------------------------------------------------------------*/
+/* .customer-profile {
+
+} */
+
+.btn-customer {
+  padding-left: 20px;
+  border-radius: 10px;
+  background-color: #f03c02;
+  border: none;
+  padding: 10px;
+  color: #ececec;
+
+}
+
+.btn-customer:hover {
+  background-color: #ececec;
+  color: #000;
+}
+
+/*--------------------------------------------------------------
+# Customer Profile Template
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# About Us Template
+--------------------------------------------------------------*/
+
+.portfolio-container {
+  padding-bottom: 50px;
+}
+
+.testimonials .container {
+  padding-top: 20px;
+  padding-bottom: 40px;
+}
+
+.testimonials .testimonial-item {
+  background-color: var(--surface-color);
+  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  position: relative;
+  height: 100%;
+  border-radius: 20px;
+}
+
+.testimonials .testimonial-item .testimonial-img {
+  width: 90px;
+  border-radius: 50px;
+  border: 6px solid var(--background-color);
+  float: left;
+  margin: 0 10px 0 0;
+}
+
+.testimonials .testimonial-item h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 10px 0 5px 0;
+}
+
+.testimonials .testimonial-item h4 {
+  font-size: 14px;
+  color: color-mix(in srgb, var(--default-color), transparent 20%);
+  margin: 0;
+}
+
+.testimonials .testimonial-item .stars {
+  margin: 10px 0;
+}
+
+.testimonials .testimonial-item .stars i {
+  color: #ffc107;
+  margin: 0 1px;
+}
+
+.testimonials .testimonial-item .quote-icon-left,
+.testimonials .testimonial-item .quote-icon-right {
+  color: color-mix(in srgb, var(--accent-color), transparent 50%);
+  font-size: 26px;
+  line-height: 0;
+}
+
+.testimonials .testimonial-item .quote-icon-left {
+  display: inline-block;
+  left: -5px;
+  position: relative;
+}
+
+.testimonials .testimonial-item .quote-icon-right {
+  display: inline-block;
+  right: -5px;
+  position: relative;
+  top: 10px;
+  transform: scale(-1, -1);
+}
+
+.testimonials .testimonial-item p {
+  font-style: italic;
+  margin: 15px 0 0 0;
+  padding: 0;
+}
+
+/*--------------------------------------------------------------
+# About Us Template
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# Comment Form Section
+--------------------------------------------------------------*/
+.comment-form {
+  padding-top: 10px;
+}
+
+.comment-form form {
+  background-color: var(--surface-color);
+  margin-top: 30px;
+  padding: 30px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.comment-form form h4 {
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.comment-form form p {
+  font-size: 14px;
+}
+
+.comment-form form input {
+  background-color: var(--surface-color);
+  color: var(--default-color);
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 70%);
+  font-size: 14px;
+  border-radius: 4px;
+  padding: 10px 10px;
+}
+
+.comment-form form input:focus {
+  color: var(--default-color);
+  background-color: var(--surface-color);
+  box-shadow: none;
+  border-color: var(--accent-color);
+}
+
+.comment-form form input::placeholder {
+  color: color-mix(in srgb, var(--default-color), transparent 50%);
+}
+
+.comment-form form textarea {
+  background-color: var(--surface-color);
+  color: var(--default-color);
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 70%);
+  border-radius: 4px;
+  padding: 10px 10px;
+  font-size: 14px;
+  height: 120px;
+}
+
+.comment-form form textarea:focus {
+  color: var(--default-color);
+  box-shadow: none;
+  border-color: var(--accent-color);
+  background-color: var(--surface-color);
+}
+
+.comment-form form textarea::placeholder {
+  color: color-mix(in srgb, var(--default-color), transparent 50%);
+}
+
+.comment-form form .form-group {
+  margin-bottom: 25px;
+}
+
+.comment-form form .btn-primary {
+  border-radius: 4px;
+  padding: 10px 20px;
+  border: 0;
+  background-color: var(--accent-color);
+  color: var(--contrast-color);
+}
+
+.comment-form form .btn-primary:hover {
+  color: var(--contrast-color);
+  background-color: color-mix(in srgb, var(--accent-color), transparent 20%);
+}
+
+.contact .container {
+  padding-bottom: 30px;
+}
+
+.contact .info {
+  background-color: var(--surface-color);
+  padding: 40px;
+  box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.contact .info h3 {
+  font-weight: 600;
+  font-size: 24px;
+}
+
+.contact .info p {
+  color: color-mix(in srgb, var(--default-color), transparent 40%);
+  margin-bottom: 30px;
+  font-size: 15px;
+}
+
+.contact .info-item+.info-item {
+  padding-top: 20px;
+  margin-top: 20px;
+  border-top: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+}
+
+.contact .info-item i {
+  font-size: 24px;
+  color: var(--accent-color);
+  transition: all 0.3s ease-in-out;
+  margin-right: 20px;
+}
+
+.contact .info-item h4 {
+  padding: 0;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.contact .info-item p {
+  padding: 0;
+  margin-bottom: 0;
+  font-size: 14px;
+  color: color-mix(in srgb, var(--default-color), transparent 40%);
+}
+
+.contact .php-email-form {
+  width: 100%;
+}
+
+.contact .php-email-form .form-group {
+  padding-bottom: 8px;
+}
+
+.contact .php-email-form input[type=text],
+.contact .php-email-form input[type=email],
+.contact .php-email-form textarea {
+  color: var(--default-color);
+  background-color: var(--surface-color);
+  border-radius: 0px;
+  box-shadow: none;
+  font-size: 14px;
+  border-color: color-mix(in srgb, var(--default-color), transparent 80%);
+}
+
+.contact .php-email-form input[type=text]:focus,
+.contact .php-email-form input[type=email]:focus,
+.contact .php-email-form textarea:focus {
+  border-color: var(--accent-color);
+}
+
+.contact .php-email-form input[type=text]::placeholder,
+.contact .php-email-form input[type=email]::placeholder,
+.contact .php-email-form textarea::placeholder {
+  color: color-mix(in srgb, var(--default-color), transparent 70%);
+}
+
+.contact .php-email-form input[type=text],
+.contact .php-email-form input[type=email] {
+  height: 48px;
+  padding: 10px 15px;
+}
+
+.contact .php-email-form textarea {
+  padding: 10px 12px;
+  height: 290px;
+}
+
+.contact .php-email-form button[type=submit] {
+  background: var(--accent-color);
+  color: var(--contrast-color);
+  border: 0;
+  padding: 13px 50px;
+  transition: 0.4s;
+  border-radius: 4px;
+}
+
+.contact .php-email-form button[type=submit]:hover {
+  background: color-mix(in srgb, var(--accent-color) 90%, black 15%);
+}
+
+/*--------------------------------------------------------------
+# Contact Form Section
 --------------------------------------------------------------*/
