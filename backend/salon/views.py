@@ -1,13 +1,9 @@
-from django.views.generic import ListView, DetailView, DeleteView
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse_lazy
 from django.contrib import messages
 from django.db import transaction
 from django.http import JsonResponse, QueryDict
-import json
-from django import forms
-from .forms import ServiceForm, ServicesGivenForm, AppointmentBookingForm
+from .forms import ServicesGivenForm, AppointmentBookingForm
 from .models import service, salonAppointment, servicesGiven
 from users.models import EmployeeProfile, CustomerProfile
 from django.views.decorators.csrf import csrf_exempt
@@ -20,10 +16,18 @@ def services_list(request):
     
     return render(request, 'salon/services_list.html')
 
+def about_us(request):
+    testimonials = servicesGiven.objects.filter(
+        customerComment__isnull=False
+    ).select_related('customerId', 'employeeId').order_by('-id')
+    return render(request, 'salon/about-us.html',
+        {'testimonials':testimonials}
+    )
+
+
+
 @login_required
 def services_given_survey(request, appointment_id=None):
-    from .forms import ServicesGivenForm
-    from django.contrib import messages
 
     if request.method == 'POST':
         form = ServicesGivenForm(request.POST, user=request.user)
@@ -100,9 +104,6 @@ def services_given_survey(request, appointment_id=None):
         'appointment_id': appointment_id,
     }
     return render(request, 'salon/services_given_survey.html', context)
-
-def about_us(request):
-    return render(request, 'salon/about-us.html')
 
 
 @login_required

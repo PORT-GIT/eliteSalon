@@ -510,12 +510,12 @@
 /*--------------------------------------------------------------
 # Customer Profile Template
 --------------------------------------------------------------*/
-/* .customer-profile {
-
-} */
+.customer-container {
+  padding: 50px 0px;
+}
 
 .btn-customer {
-  padding-left: 20px;
+  padding-left: 30px;
   border-radius: 10px;
   background-color: #f03c02;
   border: none;
